@@ -1,0 +1,26 @@
+# ==============================================================================
+# Core Computer Vision & AI Backend
+# ==============================================================================
+ultralytics>=8.1.0        # Official YOLO implementation (Object Detection & Tracking)
+opencv-python-headless>=4.9.0.80  # Optimized OpenCV for headless/Docker environments
+numpy>=1.24.0             # High-performance numerical processing for arrays/bounding boxes
+
+# ==============================================================================
+# User Interface (UI) Engine
+# ==============================================================================
+streamlit>=1.32.0         # Rapid web dashboard application framework
+watchdog>=4.0.0           # Efficient file system monitoring for UI auto-reloads
+
+# ==============================================================================
+# Testing & Code Quality (TDD Pipeline)
+# ==============================================================================
+pytest>=8.0.0             # Robust testing framework for your TDD specification
+pytest-cov>=4.1.0         # Code coverage reports for GitHub Actions CI/CD gates
+black>=24.0.0             # Strict, uncompromising Python code formatter
+ruff>=0.3.0               # High-speed linter for checking code bugs and style errors
+
+# ==============================================================================
+# Utilities & Environment Configuration
+# ==============================================================================
+python-dotenv>=1.0.0      # Secure management of local environment variables
+pyyaml>=6.0.1             # Parsing setup profiles under config/ thresholds
