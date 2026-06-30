@@ -102,6 +102,14 @@ We welcome contributions from software engineers, ML researchers, and data-drive
 
 *For speculative ideas, hardware setup discussions, or philosophical questions, please use the **GitHub Discussions** tab rather than open code issues.*
 
+--
+
+## 🚀 Future Horizons & Roadmap
+
+While our primary engine focuses on the physical elimination of known aerial objects, data integrity in the modern era requires us to look beyond the physical sky and into the pixels themselves.
+
+As a secondary but increasingly critical long-term goal, the project aims to integrate pipeline layers designed to detect CGI, deepfakes, generative AI inserts, and advanced digital montages. Ensuring a video hasn't been synthetically manufactured is just as vital as ensuring it isn't a bird. While this is not our primary launch feature, building robust tools to flag digital manipulation is a high-priority milestone on our development roadmap.
+
 ---
 
 ## 📄 License
