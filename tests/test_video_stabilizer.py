@@ -72,3 +72,27 @@ def test_detect_features_raises_error_on_none_frame():
 
     with pytest.raises(ValueError):
         stabilizer.detect_features(None)
+
+
+def test_track_features_returns_matching_points():
+    config = StabilizerConfig()
+    stabilizer = VideoStabilizer(config)
+
+    frame1 = np.zeros((480, 640), dtype=np.uint8)
+    frame2 = np.zeros((480, 640), dtype=np.uint8)
+
+    # Draw the same object with a slight movement
+    cv2.circle(frame1, (200, 200), 20, 255, -1)
+    cv2.circle(frame2, (205, 200), 20, 255, -1)
+
+    features = stabilizer.detect_features(frame1)
+
+    old_points, new_points = stabilizer.track_features(
+        frame1,
+        frame2,
+        features,
+    )
+
+    assert old_points is not None
+    assert new_points is not None
+    assert len(old_points) == len(new_points)

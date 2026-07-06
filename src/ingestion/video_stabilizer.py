@@ -11,7 +11,8 @@ class VideoStabilizer:
     Current implementation provides:
     - Input frame validation
     - Frame preprocessing (grayscale conversion)
-    - Feature detection for motion tracking
+    - Feature detection
+    - Feature tracking using Lucas-Kanade Optical Flow
 
     Motion estimation and frame stabilization will be implemented
     in future development phases.
@@ -29,14 +30,14 @@ class VideoStabilizer:
     @staticmethod
     def _validate_frame(frame: np.ndarray) -> None:
         """
-        Validate the input frame.
+        Validate an input frame.
 
         Args:
-            frame: Input image frame.
+            frame: Input image.
 
         Raises:
-            ValueError: If the frame is None.
-            TypeError: If the frame is not a NumPy array.
+            ValueError: If frame is None.
+            TypeError: If frame is not a NumPy array.
         """
         if frame is None:
             raise ValueError("Frame cannot be None.")
@@ -57,17 +58,17 @@ class VideoStabilizer:
         self._validate_frame(frame)
 
         return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    
 
     def detect_features(self, gray_frame: np.ndarray) -> np.ndarray | None:
         """
-        Detect feature points suitable for motion tracking.
+        Detect feature points suitable for tracking.
 
         Args:
             gray_frame: Grayscale input frame.
 
         Returns:
-            A NumPy array containing detected feature points,
-            or None if no suitable features are found.
+            Detected feature points or None.
         """
         self._validate_frame(gray_frame)
 
@@ -78,6 +79,45 @@ class VideoStabilizer:
             minDistance=self.config.min_distance,
             blockSize=self.config.block_size,
         )
+
+    def track_features(
+        self,
+        previous_frame: np.ndarray,
+        current_frame: np.ndarray,
+        previous_points: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Track feature points between two frames using
+        Lucas-Kanade Optical Flow.
+
+        Args:
+            previous_frame: Previous grayscale frame.
+            current_frame: Current grayscale frame.
+            previous_points: Feature points detected in the previous frame.
+
+        Returns:
+            Tuple containing matched old and new feature points.
+        """
+        self._validate_frame(previous_frame)
+        self._validate_frame(current_frame)
+
+        if previous_points is None:
+            raise ValueError("Previous feature points cannot be None.")
+
+        next_points, status, _ = cv2.calcOpticalFlowPyrLK(
+            previous_frame,
+            current_frame,
+            previous_points,
+            None,
+        )
+
+        if next_points is None or status is None:
+            return np.empty((0, 2)), np.empty((0, 2))
+
+        good_old = previous_points[status.flatten() == 1]
+        good_new = next_points[status.flatten() == 1]
+
+        return good_old, good_new
 
     def stabilize(self, frame: np.ndarray) -> np.ndarray:
         """
