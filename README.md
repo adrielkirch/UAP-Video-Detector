@@ -89,7 +89,15 @@ uap-video-detector/
 * [ ] **Phase 2:** Customized baseline fine-tuning specifically targeting edge-case aerial noise (refraction, birds, satellites).
 * [ ] **Phase 3:** Automated extraction engine that clips and stores high-resolution snippets of unclassified visual bounding boxes.
 * [ ] **Phase 4:** Agentic orchestration allowing logged anomalies to automatically generate metadata entries for community databases.
-
+*** initiation Povoa01 suggestion 09JUL26***
+* [ ] **Phase 1:** Initial input video analysis (file integrity, metadata extraction, multi extention formats).
+* [ ] **Phase 2:** PreProcessing Stabilization-Frame enhancement-Noise Reduction (OpenCV or similar).
+* [ ] **Phase 3:** YOLO (object detection - identification - localization).
+* [ ] **Phase 4:** Tracking Process (frame association - identity - movement - trajectory).
+* [ ] **Phase 5:** Scoring Process (UAP high score - crop - confidence level - known pattern - consistency - motion - size - shape).
+* [ ] **Phase 6:** Forensic Analysis (motion - lighting - noise - compression - blur - scene integration).
+* [ ] **Phase 7:** Analysis Report (final classification - forensic - scores - CGI/IA
+*** finalization Povoa01 suggestion 09JUL26***
 ---
 
 ## 🤝 Contributing
