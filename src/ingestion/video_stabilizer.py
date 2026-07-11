@@ -13,8 +13,9 @@ class VideoStabilizer:
     - Frame preprocessing (grayscale conversion)
     - Feature detection
     - Feature tracking using Lucas-Kanade Optical Flow
+    - Motion estimation using affine transformation
 
-    Motion estimation and frame stabilization will be implemented
+    Frame warping and motion smoothing will be implemented
     in future development phases.
     """
 
@@ -58,7 +59,6 @@ class VideoStabilizer:
         self._validate_frame(frame)
 
         return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
 
     def detect_features(self, gray_frame: np.ndarray) -> np.ndarray | None:
         """
@@ -118,6 +118,44 @@ class VideoStabilizer:
         good_new = next_points[status.flatten() == 1]
 
         return good_old, good_new
+
+    def estimate_motion(
+        self,
+        old_points: np.ndarray,
+        new_points: np.ndarray,
+    ) -> np.ndarray:
+        """
+        Estimate camera motion using an affine transformation.
+
+        Args:
+            old_points: Feature points from the previous frame.
+            new_points: Matching feature points from the current frame.
+
+        Returns:
+            2x3 affine transformation matrix.
+
+        Raises:
+            ValueError:
+                If there are fewer than three matching points or
+                the transform cannot be estimated.
+        """
+        if old_points is None or new_points is None:
+            raise ValueError("Feature points cannot be None.")
+
+        if len(old_points) < 3 or len(new_points) < 3:
+            raise ValueError(
+                "At least three matching feature points are required."
+            )
+
+        matrix, _ = cv2.estimateAffinePartial2D(
+            old_points,
+            new_points,
+        )
+
+        if matrix is None:
+            raise ValueError("Failed to estimate affine transform.")
+
+        return matrix
 
     def stabilize(self, frame: np.ndarray) -> np.ndarray:
         """

@@ -96,3 +96,34 @@ def test_track_features_returns_matching_points():
     assert old_points is not None
     assert new_points is not None
     assert len(old_points) == len(new_points)
+
+
+def test_estimate_motion_returns_affine_transform():
+    config = StabilizerConfig()
+    stabilizer = VideoStabilizer(config)
+
+    old_points = np.array(
+        [
+            [[100, 100]],
+            [[200, 100]],
+            [[100, 200]],
+        ],
+        dtype=np.float32,
+    )
+
+    new_points = np.array(
+        [
+            [[105, 102]],
+            [[205, 102]],
+            [[105, 202]],
+        ],
+        dtype=np.float32,
+    )
+
+    matrix = stabilizer.estimate_motion(
+        old_points,
+        new_points,
+    )
+
+    assert matrix is not None
+    assert matrix.shape == (2, 3)
