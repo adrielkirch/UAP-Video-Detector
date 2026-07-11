@@ -15,8 +15,11 @@
 * Docker & Docker Compose (Optional, but recommended for instant environment setup)
 * CUDA-compatible GPU (Highly recommended for real-time video processing)
 ```
+<img width="320" height="320" alt="image" src="https://github.com/user-attachments/assets/e5fa3ef7-1510-4076-abac-e1e009351039" />
+<br><br><br>
 
 ![alt text](uap-video-detector.png)
+
 
 ### Local Installation
 1. **Clone the repository:**
