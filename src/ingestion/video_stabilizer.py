@@ -156,6 +156,48 @@ class VideoStabilizer:
             raise ValueError("Failed to estimate affine transform.")
 
         return matrix
+    
+    
+    def apply_transform(
+        self,
+        frame: np.ndarray,
+        transform: np.ndarray,
+    ) -> np.ndarray:
+        """
+        Apply an affine transformation to stabilize a frame.
+
+        Args:
+            frame: Input video frame.
+            transform: 2x3 affine transformation matrix.
+
+        Returns:
+            Stabilized frame.
+
+        Raises:
+            ValueError:
+                If the transform is invalid.
+        """
+        self._validate_frame(frame)
+
+        if transform is None:
+            raise ValueError("Transform matrix cannot be None.")
+
+        if transform.shape != (2, 3):
+            raise ValueError(
+                "Transform matrix must have shape (2, 3)."
+            )
+
+        height, width = frame.shape[:2]
+
+        stabilized = cv2.warpAffine(
+            frame,
+            transform,
+            (width, height),
+            flags=cv2.INTER_LINEAR,
+            borderMode=cv2.BORDER_REPLICATE,
+        )
+
+        return stabilized
 
     def stabilize(self, frame: np.ndarray) -> np.ndarray:
         """

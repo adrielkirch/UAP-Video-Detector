@@ -127,3 +127,29 @@ def test_estimate_motion_returns_affine_transform():
 
     assert matrix is not None
     assert matrix.shape == (2, 3)
+
+
+def test_apply_transform_returns_stabilized_frame():
+    config = StabilizerConfig()
+    stabilizer = VideoStabilizer(config)
+
+    frame = np.zeros((480, 640, 3), dtype=np.uint8)
+    cv2.rectangle(frame, (100, 100), (200, 200), (255, 255, 255), -1)
+
+    transform = np.array(
+        [
+            [1.0, 0.0, 10.0],
+            [0.0, 1.0, 5.0],
+        ],
+        dtype=np.float32,
+    )
+
+    stabilized = stabilizer.apply_transform(
+        frame,
+        transform,
+    )
+
+    assert stabilized is not None
+    assert stabilized.shape == frame.shape
+    
+    
