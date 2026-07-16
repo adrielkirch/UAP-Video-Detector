@@ -156,8 +156,7 @@ class VideoStabilizer:
             raise ValueError("Failed to estimate affine transform.")
 
         return matrix
-    
-    
+
     def apply_transform(
         self,
         frame: np.ndarray,
@@ -198,6 +197,58 @@ class VideoStabilizer:
         )
 
         return stabilized
+
+    def smooth_motion(
+        self,
+        transforms: np.ndarray,
+    ) -> np.ndarray:
+        """
+        Smooth motion using a moving average filter.
+
+        Args:
+            transforms: Array of frame-to-frame motion values.
+
+        Returns:
+            Smoothed motion values.
+        """
+        if transforms is None:
+            raise ValueError("Transforms cannot be None.")
+
+        if not isinstance(transforms, np.ndarray):
+            raise TypeError("Transforms must be a NumPy ndarray.")
+
+        if len(transforms) == 0:
+            return transforms.copy()
+
+        radius = max(0, int(self.config.smoothing_radius))
+        smoothed = np.array(transforms, copy=True)
+
+        if transforms.ndim == 1:
+            values = transforms.astype(np.float32)
+            for index in range(len(values)):
+                if index in (0, len(values) - 1):
+                    continue
+
+                start = max(0, index - radius)
+                end = min(len(values), index + radius + 1)
+                moving_average = np.mean(values[start:end])
+                smoothed[index] = min(moving_average, values[index])
+
+            return smoothed
+
+        for column in range(transforms.shape[1]):
+            values = transforms[:, column].astype(np.float32)
+
+            for index in range(len(values)):
+                if index in (0, len(values) - 1):
+                    continue
+
+                start = max(0, index - radius)
+                end = min(len(values), index + radius + 1)
+                moving_average = np.mean(values[start:end])
+                smoothed[index, column] = min(moving_average, values[index])
+
+        return smoothed
 
     def stabilize(self, frame: np.ndarray) -> np.ndarray:
         """

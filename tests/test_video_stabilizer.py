@@ -151,5 +151,28 @@ def test_apply_transform_returns_stabilized_frame():
 
     assert stabilized is not None
     assert stabilized.shape == frame.shape
+
+
+def test_smooth_motion_reduces_jitter():
+    config = StabilizerConfig()
+    stabilizer = VideoStabilizer(config)
+
+    transforms = np.array(
+        [
+            [0, 0],
+            [2, 1],
+            [4, 2],
+            [6, 3],
+            [8, 4],
+        ],
+        dtype=np.float32,
+    )
+
+    smoothed = stabilizer.smooth_motion(transforms)
+
+    assert smoothed is not None
+    assert smoothed.shape == transforms.shape
+    assert np.allclose(smoothed[0], transforms[0])
+    assert np.all(smoothed <= transforms)
     
     
