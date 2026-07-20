@@ -250,20 +250,58 @@ class VideoStabilizer:
 
         return smoothed
 
-    def stabilize(self, frame: np.ndarray) -> np.ndarray:
+    def stabilize(
+        self,
+        previous_frame: np.ndarray | None = None,
+        current_frame: np.ndarray | None = None,
+    ) -> np.ndarray:
         """
-        Stabilize a single video frame.
-
-        This is currently a placeholder implementation that simply
-        returns a copy of the input frame. Future versions will
-        estimate camera motion and compensate for it.
+        Stabilize a frame using either a single-frame input or a
+        previous/current frame pair.
 
         Args:
-            frame: Input video frame.
+            previous_frame: Previous video frame or a single frame input.
+            current_frame: Current video frame.
 
         Returns:
-            Stabilized frame.
+            A stabilized frame copy.
         """
-        self._validate_frame(frame)
+        if current_frame is None:
+            self._validate_frame(previous_frame)
+            return previous_frame.copy()
 
-        return frame.copy()
+        if previous_frame is None:
+            self._validate_frame(current_frame)
+            return current_frame.copy()
+
+        self._validate_frame(previous_frame)
+        self._validate_frame(current_frame)
+
+        previous_gray = self.preprocess(previous_frame)
+        current_gray = self.preprocess(current_frame)
+
+        features = self.detect_features(previous_gray)
+
+        if features is None:
+            return current_frame.copy()
+
+        old_points, new_points = self.track_features(
+            previous_gray,
+            current_gray,
+            features,
+        )
+
+        if len(old_points) < 3 or len(new_points) < 3:
+            return current_frame.copy()
+
+        transform = self.estimate_motion(
+            old_points,
+            new_points,
+        )
+
+        stabilized = self.apply_transform(
+            current_frame,
+            transform,
+        )
+
+        return stabilized
