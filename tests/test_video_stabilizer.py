@@ -134,7 +134,14 @@ def test_apply_transform_returns_stabilized_frame():
     stabilizer = VideoStabilizer(config)
 
     frame = np.zeros((480, 640, 3), dtype=np.uint8)
-    cv2.rectangle(frame, (100, 100), (200, 200), (255, 255, 255), -1)
+
+    cv2.rectangle(
+        frame,
+        (100, 100),
+        (200, 200),
+        (255, 255, 255),
+        -1,
+    )
 
     transform = np.array(
         [
@@ -174,5 +181,25 @@ def test_smooth_motion_reduces_jitter():
     assert smoothed.shape == transforms.shape
     assert np.allclose(smoothed[0], transforms[0])
     assert np.all(smoothed <= transforms)
-    
-    
+
+
+def test_stabilize_returns_copy_of_frame():
+    config = StabilizerConfig()
+    stabilizer = VideoStabilizer(config)
+
+    frame = np.zeros((480, 640, 3), dtype=np.uint8)
+
+    cv2.rectangle(
+        frame,
+        (100, 100),
+        (200, 200),
+        (255, 255, 255),
+        -1,
+    )
+
+    output = stabilizer.stabilize(frame)
+
+    assert output is not None
+    assert output.shape == frame.shape
+    assert np.array_equal(output, frame)
+    assert output is not frame
