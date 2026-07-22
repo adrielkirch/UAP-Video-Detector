@@ -249,6 +249,43 @@ class VideoStabilizer:
                 smoothed[index, column] = min(moving_average, values[index])
 
         return smoothed
+    def crop_frame(
+        self,
+        frame: np.ndarray,
+        border: int = 20,
+    ) -> np.ndarray:
+        """
+        Crop borders introduced during frame stabilization.
+
+        Args:
+            frame: Stabilized frame.
+            border: Number of pixels to crop from each edge.
+
+        Returns:
+            Cropped frame resized back to the original dimensions.
+        """
+        self._validate_frame(frame)
+
+        height, width = frame.shape[:2]
+
+        if border <= 0:
+            return frame.copy()
+
+        if border * 2 >= height or border * 2 >= width:
+            raise ValueError(
+                "Border is too large for the frame dimensions."
+            )
+
+        cropped = frame[
+            border: height - border,
+            border: width - border,
+        ]
+
+        return cv2.resize(
+            cropped,
+            (width, height),
+            interpolation=cv2.INTER_LINEAR,
+        )
 
     def stabilize(
         self,
@@ -305,3 +342,5 @@ class VideoStabilizer:
         )
 
         return stabilized
+    
+    

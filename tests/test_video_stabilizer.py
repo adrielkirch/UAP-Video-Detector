@@ -203,3 +203,34 @@ def test_stabilize_returns_copy_of_frame():
     assert output.shape == frame.shape
     assert np.array_equal(output, frame)
     assert output is not frame
+
+
+def test_crop_frame_returns_same_shape():
+    config = StabilizerConfig()
+    stabilizer = VideoStabilizer(config)
+
+    frame = np.zeros(
+        (480, 640, 3),
+        dtype=np.uint8,
+    )
+
+    cropped = stabilizer.crop_frame(frame)
+
+    assert cropped is not None
+    assert cropped.shape == frame.shape
+
+
+def test_crop_frame_invalid_border():
+    config = StabilizerConfig()
+    stabilizer = VideoStabilizer(config)
+
+    frame = np.zeros(
+        (100, 100, 3),
+        dtype=np.uint8,
+    )
+
+    with pytest.raises(ValueError):
+        stabilizer.crop_frame(
+            frame,
+            border=60,
+        )
