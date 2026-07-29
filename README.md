@@ -8,6 +8,128 @@
 
 ---
 
+## 📋 Spec Kit (Recommended)
+
+This project uses [GitHub Spec Kit](https://github.com/github/spec-kit) so **specifications stay the source of truth** for what we build. Spec Kit is **open source and optional** — you can contribute without it — but it is **recommended** for feature work so requirements, plans, and tasks stay aligned before code changes.
+
+### Prerequisites
+* Python 3.11+
+* [uv](https://docs.astral.sh/uv/) (Astral’s Python package manager)
+
+### Platform & Shell Compatibility
+
+**Operating Systems**: Windows, macOS, Linux  
+**Shells**: Git Bash (recommended), PowerShell, Bash, Zsh, Command Prompt/CMD  
+**Editors**: Cursor, VS Code, Claude Code, Zed, and 25+ other AI coding agents
+
+### Install the Specify CLI
+
+**Ephemeral (no permanent install):**
+```bash
+uvx --from git+https://github.com/github/spec-kit.git specify --help
+```
+
+**Persistent (recommended for regular contributors):**
+```bash
+uv tool install specify-cli
+# Or pin a release: uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@vX.Y.Z
+```
+
+### Multi-Platform & Multi-Editor Support
+
+This open source project supports multiple development environments and shells:
+
+#### **For Cursor users** (current setup)
+Already initialized! Skills are in `.cursor/skills/`. Use `/speckit-*` commands in chat.
+
+#### **For VS Code + GitHub Copilot users**
+```bash
+cd UAP-Video-Detector
+specify init --here --force --integration copilot --script bash  # Git Bash
+# OR
+specify init --here --force --integration copilot --script ps    # PowerShell
+```
+
+#### **For Claude Code users** 
+```bash
+cd UAP-Video-Detector
+specify init --here --force --integration claude --script bash   # Git Bash  
+# OR
+specify init --here --force --integration claude --script ps     # PowerShell
+```
+
+#### **For other AI coding agents**
+
+Spec Kit supports 30+ AI coding agents. Popular open source friendly options:
+
+```bash
+# Gemini CLI
+specify init --here --force --integration gemini
+
+# Codex CLI  
+specify init --here --force --integration codex
+
+# Cline (VS Code extension)
+specify init --here --force --integration cline
+
+# Zed editor
+specify init --here --force --integration zed
+
+# Tabnine CLI
+specify init --here --force --integration tabnine
+
+# See all 30+ available integrations
+specify integration list
+
+# Generic setup (bring your own agent)
+specify init --here --force --integration generic --integration-options="--commands-dir .myagent/commands/"
+```
+
+### Shell Support
+
+**Git Bash (recommended for cross-platform)**:
+```bash
+# All Spec Kit scripts work in Git Bash
+cd UAP-Video-Detector
+specify init --here --script sh
+```
+
+**PowerShell (Windows)**:
+```powershell
+# PowerShell-optimized scripts
+cd UAP-Video-Detector  
+specify init --here --script ps
+```
+
+**Command Prompt/CMD**:
+```cmd
+# Basic support via Python scripts
+cd UAP-Video-Detector
+specify init --here --script py
+```
+
+### Typical Spec-Driven Workflow
+
+Regardless of your editor/agent, the workflow is the same:
+
+1. **`/speckit-constitution`** — establish project principles  
+2. **`/speckit-specify`** — define what and why (requirements)  
+3. **`/speckit-plan`** — create technical implementation plan  
+4. **`/speckit-tasks`** — generate actionable task breakdown  
+5. **`/speckit-implement`** — execute the implementation  
+
+**Optional quality gates**: `/speckit-clarify`, `/speckit-checklist`, `/speckit-analyze`, `/speckit-converge`
+
+**Note**: Command syntax varies by agent:
+- **Cursor/VS Code**: `/speckit-*` 
+- **Claude Code**: `/speckit.*` or skills mode
+- **Codex CLI**: `$speckit-*`
+- **Generic**: Check your agent's documentation
+
+Scaffolding lives in `.specify/` (templates, scripts, memory). Feature specs are written under `specs/` as you work. See the [Spec Kit Quick Start](https://github.github.io/spec-kit/quickstart.html) for details.
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -61,6 +183,8 @@ The architecture is built cleanly to separate ingestion, deep learning inference
 
 ```text
 uap-video-detector/
+├── .cursor/skills/           # Spec Kit skills for Cursor (optional workflow)
+├── .specify/                 # Spec Kit templates, scripts, and project memory
 ├── .github/
 │   ├── ISSUE_TEMPLATE/       # Structured bug reports & feature requests
 │   └── workflows/            # CI/CD pipelines (automated linting and testing)
@@ -69,6 +193,7 @@ uap-video-detector/
 │   ├── raw/                  # Input videos and stream configurations
 │   └── processed/            # Extracted crops and logs of anomalous events
 ├── models/                   # Custom trained weights (.pt files)
+├── specs/                    # Feature specs/plans/tasks (created via Spec Kit)
 ├── src/                    
 │   ├── ingestion/            # Video streaming and frame extraction logic
 │   ├── inference/            # YOLO detection wrapper and anomaly filtering rules
@@ -105,13 +230,44 @@ uap-video-detector/
 
 ## 🤝 Contributing
 
-We welcome contributions from software engineers, ML researchers, and data-driven UFOlogists alike!
+We welcome contributions from software engineers, ML researchers, and data-driven UFOlogists alike! **All development environments are supported** — contribute using your preferred setup.
 
-1. Check out the open tickets in our **Issues** tab.
-2. Review our `CONTRIBUTING.md` guide before making changes.
-3. Open a Pull Request against the `main` branch.
+### Quick Contribution Setup
 
-*For speculative ideas, hardware setup discussions, or philosophical questions, please use the **GitHub Discussions** tab rather than open code issues.*
+**Windows developers**:
+```powershell
+# Git + PowerShell + VS Code/Cursor
+git clone https://github.com/YOUR_USERNAME/UAP-Video-Detector.git
+cd UAP-Video-Detector
+uv tool install specify-cli
+specify init --here --integration copilot --script ps  # or cursor-agent
+```
+
+**macOS/Linux developers**:
+```bash
+# Git + Bash + any editor
+git clone https://github.com/YOUR_USERNAME/UAP-Video-Detector.git
+cd UAP-Video-Detector  
+uv tool install specify-cli
+specify init --here --integration claude --script sh   # or copilot/cursor-agent
+```
+
+### Contributing Process
+
+1. Check out open tickets in our **Issues** tab
+2. Review `CONTRIBUTING.md` for TDD requirements and code quality standards
+3. Use **Spec Kit** for feature work (optional but recommended for alignment)
+4. Open a Pull Request against the `main` branch
+
+*For speculative ideas, hardware setup discussions, or philosophical questions, please use the **GitHub Discussions** tab rather than opening code issues.*
+
+### Development Environment Support
+
+This project supports **30+ AI coding agents** and **all major platforms**:
+- **IDEs**: Cursor, VS Code, Zed, Android Studio, IntelliJ
+- **CLI agents**: Claude Code, Gemini CLI, Codex CLI, Tabnine CLI
+- **Shells**: Git Bash, PowerShell, Bash, Zsh, Command Prompt
+- **OS**: Windows, macOS, Linux
 
 --
 
