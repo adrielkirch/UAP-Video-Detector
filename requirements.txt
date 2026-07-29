@@ -1,5 +1,5 @@
 # ==============================================================================
-# Core Computer Vision & AI Backend
+# Core Computer Vision & AI Backend (MVP Dependencies)
 # ==============================================================================
 ultralytics>=8.1.0        # Official YOLO implementation (Object Detection & Tracking)
 opencv-python-headless>=4.9.0.80  # Optimized OpenCV for headless/Docker environments
@@ -23,4 +23,4 @@ ruff>=0.3.0               # High-speed linter for checking code bugs and style e
 # Utilities & Environment Configuration
 # ==============================================================================
 python-dotenv>=1.0.0      # Secure management of local environment variables
-pyyaml>=6.0.1             # Parsing setup profiles under config/ thresholds
+pyyaml>=6.0.1             # Parsing config/video_player.yaml and config/detector.yaml

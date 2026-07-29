@@ -24,12 +24,12 @@
 
 **Purpose**: Package layout, dependencies, and test scaffolding so TDD can run
 
-- [ ] T001 Create package directories `src/inference/`, `src/orchestration/`, `src/ui/components/`, `tests/unit/`, `tests/contract/`, `tests/integration/` per plan.md
-- [ ] T002 [P] Add `src/inference/__init__.py`, `src/orchestration/__init__.py`, `src/ui/__init__.py`, `src/ui/components/__init__.py`
-- [ ] T003 [P] Add pytest discovery config (or confirm) in `pyproject.toml` or `pytest.ini` for `tests/`
-- [ ] T004 [P] Declare MVP deps (opencv-python, numpy, ultralytics, streamlit, pyyaml, pytest, pytest-cov) in `requirements.txt`
-- [ ] T005 [P] Add empty placeholder configs `config/video_player.yaml` and `config/detector.yaml` matching `specs/001-yolo-video-player/contracts/config-schema.md`
-- [ ] T006 [P] Ensure `data/raw/` and `models/` exist with `.gitkeep` (weights not committed)
+- [x] T001 Create package directories `src/inference/`, `src/orchestration/`, `src/ui/components/`, `tests/unit/`, `tests/contract/`, `tests/integration/` per plan.md
+- [x] T002 [P] Add `src/inference/__init__.py`, `src/orchestration/__init__.py`, `src/ui/__init__.py`, `src/ui/components/__init__.py`
+- [x] T003 [P] Add pytest discovery config (or confirm) in `pyproject.toml` or `pytest.ini` for `tests/`
+- [x] T004 [P] Declare MVP deps (opencv-python, numpy, ultralytics, streamlit, pyyaml, pytest, pytest-cov) in `requirements.txt`
+- [x] T005 [P] Add empty placeholder configs `config/video_player.yaml` and `config/detector.yaml` matching `specs/001-yolo-video-player/contracts/config-schema.md`
+- [x] T006 [P] Ensure `data/raw/` and `models/` exist with `.gitkeep` (weights not committed)
 
 ---
 
@@ -41,17 +41,17 @@
 
 ### Tests (TDD) — Foundation
 
-- [ ] T007 [P] Write failing unit tests for YAML config load/validation in `tests/unit/test_config_loaders.py`
-- [ ] T008 [P] Write failing unit tests for shared exceptions messages in `tests/unit/test_ingestion_exceptions.py`
-- [ ] T009 [P] Write failing unit tests for `Detection` / `FrameDetections` value objects in `tests/unit/test_detection_types.py`
+- [x] T007 [P] Write failing unit tests for YAML config load/validation in `tests/unit/test_config_loaders.py`
+- [x] T008 [P] Write failing unit tests for shared exceptions messages in `tests/unit/test_ingestion_exceptions.py`
+- [x] T009 [P] Write failing unit tests for `Detection` / `FrameDetections` value objects in `tests/unit/test_detection_types.py`
 
 ### Implementation — Foundation
 
-- [ ] T010 Extend upload/session exceptions in `src/ingestion/exceptions.py` (`UploadRejectedError`, clear messages)
-- [ ] T011 Implement `load_video_player_config` in `src/ingestion/config.py` reading `config/video_player.yaml`
-- [ ] T012 [P] Implement detector config loader in `src/inference/config.py` reading `config/detector.yaml`
-- [ ] T013 [P] Implement `Detection` and `FrameDetections` in `src/inference/detection_types.py` per `data-model.md`
-- [ ] T014 Run `pytest tests/unit/test_config_loaders.py tests/unit/test_ingestion_exceptions.py tests/unit/test_detection_types.py -q` and confirm green
+- [x] T010 Extend upload/session exceptions in `src/ingestion/exceptions.py` (`UploadRejectedError`, clear messages)
+- [x] T011 Implement `load_video_player_config` in `src/ingestion/config.py` reading `config/video_player.yaml`
+- [x] T012 [P] Implement detector config loader in `src/inference/config.py` reading `config/detector.yaml`
+- [x] T013 [P] Implement `Detection` and `FrameDetections` in `src/inference/detection_types.py` per `data-model.md`
+- [x] T014 Run `pytest tests/unit/test_config_loaders.py tests/unit/test_ingestion_exceptions.py tests/unit/test_detection_types.py -q` and confirm green
 
 **Checkpoint**: Foundation ready — user story TDD can begin
 
@@ -67,24 +67,24 @@
 
 > Write these FIRST; ensure they FAIL before implementation
 
-- [ ] T015 [P] [US1] Write failing unit tests for extension allowlist in `tests/unit/test_format_validator.py`
-- [ ] T016 [P] [US1] Write failing unit tests for OpenCV openability reject path in `tests/unit/test_format_validator.py` (mock `cv2.VideoCapture`)
-- [ ] T017 [P] [US1] Write failing unit tests for `VideoSession.set_from_path` accept in `tests/unit/test_video_session.py`
-- [ ] T018 [P] [US1] Write failing unit tests for replace (still one active) in `tests/unit/test_video_session.py`
-- [ ] T019 [P] [US1] Write failing unit tests for clear/remove in `tests/unit/test_video_session.py`
-- [ ] T020 [P] [US1] Write failing unit tests for reject keeps prior active in `tests/unit/test_video_session.py`
-- [ ] T021 [P] [US1] Write failing contract tests for VideoSession API in `tests/contract/test_video_session_contract.py` per `contracts/video-session.md`
-- [ ] T022 [US1] Confirm US1 tests fail: `pytest tests/unit/test_format_validator.py tests/unit/test_video_session.py tests/contract/test_video_session_contract.py -q`
+- [x] T015 [P] [US1] Write failing unit tests for extension allowlist in `tests/unit/test_format_validator.py`
+- [x] T016 [P] [US1] Write failing unit tests for OpenCV openability reject path in `tests/unit/test_format_validator.py` (mock `cv2.VideoCapture`)
+- [x] T017 [P] [US1] Write failing unit tests for `VideoSession.set_from_path` accept in `tests/unit/test_video_session.py`
+- [x] T018 [P] [US1] Write failing unit tests for replace (still one active) in `tests/unit/test_video_session.py`
+- [x] T019 [P] [US1] Write failing unit tests for clear/remove in `tests/unit/test_video_session.py`
+- [x] T020 [P] [US1] Write failing unit tests for reject keeps prior active in `tests/unit/test_video_session.py`
+- [x] T021 [P] [US1] Write failing contract tests for VideoSession API in `tests/contract/test_video_session_contract.py` per `contracts/video-session.md`
+- [x] T022 [US1] Confirm US1 tests fail: `pytest tests/unit/test_format_validator.py tests/unit/test_video_session.py tests/contract/test_video_session_contract.py -q`
 
 ### Implementation for User Story 1
 
-- [ ] T023 [US1] Implement `FormatValidator` in `src/ingestion/format_validator.py` (extensions from config + openability)
-- [ ] T024 [US1] Implement `ActiveVideo` dataclass/model in `src/ingestion/video_session.py` (or `src/ingestion/models.py` if split)
-- [ ] T025 [US1] Implement `VideoSession.get_active` / `set_from_path` / `clear` / `last_error` in `src/ingestion/video_session.py`
-- [ ] T026 [US1] Wire replace to release prior resources in `src/ingestion/video_session.py`
-- [ ] T027 [P] [US1] Implement Streamlit uploader widget helpers in `src/ui/components/uploader.py` (no YOLO imports)
-- [ ] T028 [US1] Wire upload + clear + replace notice into `src/ui/app.py` session state
-- [ ] T029 [US1] Re-run US1 tests until green: `pytest tests/unit/test_format_validator.py tests/unit/test_video_session.py tests/contract/test_video_session_contract.py -q`
+- [x] T023 [US1] Implement `FormatValidator` in `src/ingestion/format_validator.py` (extensions from config + openability)
+- [x] T024 [US1] Implement `ActiveVideo` dataclass/model in `src/ingestion/video_session.py` (or `src/ingestion/models.py` if split)
+- [x] T025 [US1] Implement `VideoSession.get_active` / `set_from_path` / `clear` / `last_error` in `src/ingestion/video_session.py`
+- [x] T026 [US1] Wire replace to release prior resources in `src/ingestion/video_session.py`
+- [x] T027 [P] [US1] Implement Streamlit uploader widget helpers in `src/ui/components/uploader.py` (no YOLO imports)
+- [x] T028 [US1] Wire upload + clear + replace notice into `src/ui/app.py` session state
+- [x] T029 [US1] Re-run US1 tests until green: `pytest tests/unit/test_format_validator.py tests/unit/test_video_session.py tests/contract/test_video_session_contract.py -q`
 
 **Checkpoint**: US1 independently testable (upload management without player/YOLO)
 
@@ -98,25 +98,25 @@
 
 ### Tests for User Story 2 (TDD) ⚠️
 
-- [ ] T030 [P] [US2] Write failing unit tests for play → playing state in `tests/unit/test_playback_controller.py`
-- [ ] T031 [P] [US2] Write failing unit tests for pause freezes position in `tests/unit/test_playback_controller.py`
-- [ ] T032 [P] [US2] Write failing unit tests for seek_ms clamp + position update in `tests/unit/test_playback_controller.py`
-- [ ] T033 [P] [US2] Write failing unit tests for stop resets to start in `tests/unit/test_playback_controller.py`
-- [ ] T034 [P] [US2] Write failing unit tests for no-video control no-ops/errors in `tests/unit/test_playback_controller.py`
-- [ ] T035 [P] [US2] Write failing unit tests for clear/replace resets playback in `tests/unit/test_playback_controller.py`
-- [ ] T036 [P] [US2] Write failing contract tests for PlaybackController API in `tests/contract/test_playback_contract.py` per `contracts/video-session.md`
-- [ ] T037 [P] [US2] Write failing unit tests for player control helpers in `tests/unit/test_player_controls.py`
-- [ ] T038 [US2] Confirm US2 tests fail: `pytest tests/unit/test_playback_controller.py tests/unit/test_player_controls.py tests/contract/test_playback_contract.py -q`
+- [x] T030 [P] [US2] Write failing unit tests for play → playing state in `tests/unit/test_playback_controller.py`
+- [x] T031 [P] [US2] Write failing unit tests for pause freezes position in `tests/unit/test_playback_controller.py`
+- [x] T032 [P] [US2] Write failing unit tests for seek_ms clamp + position update in `tests/unit/test_playback_controller.py`
+- [x] T033 [P] [US2] Write failing unit tests for stop resets to start in `tests/unit/test_playback_controller.py`
+- [x] T034 [P] [US2] Write failing unit tests for no-video control no-ops/errors in `tests/unit/test_playback_controller.py`
+- [x] T035 [P] [US2] Write failing unit tests for clear/replace resets playback in `tests/unit/test_playback_controller.py`
+- [x] T036 [P] [US2] Write failing contract tests for PlaybackController API in `tests/contract/test_playback_contract.py` per `contracts/video-session.md`
+- [x] T037 [P] [US2] Write failing unit tests for player control helpers in `tests/unit/test_player_controls.py`
+- [x] T038 [US2] Confirm US2 tests fail: `pytest tests/unit/test_playback_controller.py tests/unit/test_player_controls.py tests/contract/test_playback_contract.py -q`
 
 ### Implementation for User Story 2
 
-- [ ] T039 [US2] Implement `PlaybackSession` state model in `src/ingestion/playback.py`
-- [ ] T040 [US2] Implement `PlaybackController` (attach, play, pause, stop, seek_ms, seek_frame, read_current_frame) in `src/ingestion/playback.py` using mocked-friendly VideoCapture wrapper
-- [ ] T041 [US2] Implement OpenCV capture wrapper in `src/ingestion/capture.py` (open/seek/read/release; injectable for tests)
-- [ ] T042 [US2] On `VideoSession.clear`/replace, reset playback via controller hook in `src/ingestion/video_session.py` / `src/ingestion/playback.py`
-- [ ] T043 [P] [US2] Implement Streamlit control widgets in `src/ui/components/player_controls.py` (play/pause/seek/stop only)
-- [ ] T044 [US2] Wire frame display + controls into `src/ui/app.py` with scan disabled by default
-- [ ] T045 [US2] Re-run US2 tests until green: `pytest tests/unit/test_playback_controller.py tests/unit/test_player_controls.py tests/contract/test_playback_contract.py -q`
+- [x] T039 [US2] Implement `PlaybackSession` state model in `src/ingestion/playback.py`
+- [x] T040 [US2] Implement `PlaybackController` (attach, play, pause, stop, seek_ms, seek_frame, read_current_frame) in `src/ingestion/playback.py` using mocked-friendly VideoCapture wrapper
+- [x] T041 [US2] Implement OpenCV capture wrapper in `src/ingestion/capture.py` (open/seek/read/release; injectable for tests)
+- [x] T042 [US2] On `VideoSession.clear`/replace, reset playback via controller hook in `src/ingestion/video_session.py` / `src/ingestion/playback.py`
+- [x] T043 [P] [US2] Implement Streamlit control widgets in `src/ui/components/player_controls.py` (play/pause/seek/stop only)
+- [x] T044 [US2] Wire frame display + controls into `src/ui/app.py` with scan disabled by default
+- [x] T045 [US2] Re-run US2 tests until green: `pytest tests/unit/test_playback_controller.py tests/unit/test_player_controls.py tests/contract/test_playback_contract.py -q`
 
 **Checkpoint**: US1+US2 MVP — upload and player work with YOLO absent
 
@@ -130,29 +130,29 @@
 
 ### Tests for User Story 3 (TDD) ⚠️
 
-- [ ] T046 [P] [US3] Write failing contract tests for `AerialDetector` protocol in `tests/contract/test_detector_protocol.py` per `contracts/detector-protocol.md`
-- [ ] T047 [P] [US3] Write failing unit tests for `NullDetector` empty/not-ready behavior in `tests/unit/test_null_detector.py`
-- [ ] T048 [P] [US3] Write failing unit tests for Ultralytics adapter class filter + confidence in `tests/unit/test_detector.py` (mock ultralytics; no weight download)
-- [ ] T049 [P] [US3] Write failing unit tests for frame_stride skipping in `tests/unit/test_scan_pipeline.py`
-- [ ] T050 [P] [US3] Write failing unit tests for pause keeps last detections in `tests/unit/test_scan_pipeline.py`
-- [ ] T051 [P] [US3] Write failing unit tests for disable scan stops new inferences in `tests/unit/test_scan_pipeline.py`
-- [ ] T052 [P] [US3] Write failing unit tests for overlay payload (label + confidence) in `tests/unit/test_detection_overlay.py`
-- [ ] T053 [P] [US3] Write failing integration test upload→play→scan toggle with stub detector in `tests/integration/test_upload_play_scan.py`
-- [ ] T080 [P] [US3] Write failing unit test that scan pipeline records per-frame infer duration and flags lag when injected fake infer > 2000ms (SC-006) in `tests/unit/test_scan_pipeline.py`
-- [ ] T054 [US3] Confirm US3 tests fail: `pytest tests/contract/test_detector_protocol.py tests/unit/test_null_detector.py tests/unit/test_detector.py tests/unit/test_scan_pipeline.py tests/unit/test_detection_overlay.py tests/integration/test_upload_play_scan.py -q`
+- [x] T046 [P] [US3] Write failing contract tests for `AerialDetector` protocol in `tests/contract/test_detector_protocol.py` per `contracts/detector-protocol.md`
+- [x] T047 [P] [US3] Write failing unit tests for `NullDetector` empty/not-ready behavior in `tests/unit/test_null_detector.py`
+- [x] T048 [P] [US3] Write failing unit tests for Ultralytics adapter class filter + confidence in `tests/unit/test_detector.py` (mock ultralytics; no weight download)
+- [x] T049 [P] [US3] Write failing unit tests for frame_stride skipping in `tests/unit/test_scan_pipeline.py`
+- [x] T050 [P] [US3] Write failing unit tests for pause keeps last detections in `tests/unit/test_scan_pipeline.py`
+- [x] T051 [P] [US3] Write failing unit tests for disable scan stops new inferences in `tests/unit/test_scan_pipeline.py`
+- [x] T052 [P] [US3] Write failing unit tests for overlay payload (label + confidence) in `tests/unit/test_detection_overlay.py`
+- [x] T053 [P] [US3] Write failing integration test upload→play→scan toggle with stub detector in `tests/integration/test_upload_play_scan.py`
+- [x] T080 [P] [US3] Write failing unit test that scan pipeline records per-frame infer duration and flags lag when injected fake infer > 2000ms (SC-006) in `tests/unit/test_scan_pipeline.py`
+- [x] T054 [US3] Confirm US3 tests fail: `pytest tests/contract/test_detector_protocol.py tests/unit/test_null_detector.py tests/unit/test_detector.py tests/unit/test_scan_pipeline.py tests/unit/test_detection_overlay.py tests/integration/test_upload_play_scan.py -q`
 
 ### Implementation for User Story 3
 
-- [ ] T055 [US3] Define `AerialDetector` protocol + errors in `src/inference/detector.py`
-- [ ] T056 [P] [US3] Implement `NullDetector` in `src/inference/null_detector.py`
-- [ ] T057 [US3] Implement Ultralytics/YOLO-World adapter (`load`, `is_ready`, `detect`, `close`) in `src/inference/detector.py` using `config/detector.yaml`
-- [ ] T058 [US3] Filter outputs to airplane/helicopter/bird/drone + threshold in `src/inference/detector.py`
-- [ ] T059 [US3] Implement `ScanPipeline` (enable flag, stride, last FrameDetections) in `src/orchestration/scan_pipeline.py`
-- [ ] T060 [US3] Compose PlaybackController frames → detector in `src/orchestration/scan_pipeline.py` without UI importing ultralytics
-- [ ] T081 [US3] Record last infer duration_ms on `ScanPipeline` and expose `last_lag_warning` when duration_ms > configurable threshold (default 2000) in `src/orchestration/scan_pipeline.py` (SC-006)
-- [ ] T061 [P] [US3] Implement overlay drawing helpers in `src/ui/components/detection_overlay.py`
-- [ ] T062 [US3] Wire Live Scan toggle + overlay into `src/ui/app.py` via orchestration only
-- [ ] T063 [US3] Re-run US3 tests until green (still no weight download in unit/contract): `pytest tests/contract/test_detector_protocol.py tests/unit/test_null_detector.py tests/unit/test_detector.py tests/unit/test_scan_pipeline.py tests/unit/test_detection_overlay.py tests/integration/test_upload_play_scan.py -q`
+- [x] T055 [US3] Define `AerialDetector` protocol + errors in `src/inference/detector.py`
+- [x] T056 [P] [US3] Implement `NullDetector` in `src/inference/null_detector.py`
+- [x] T057 [US3] Implement Ultralytics/YOLO-World adapter (`load`, `is_ready`, `detect`, `close`) in `src/inference/detector.py` using `config/detector.yaml`
+- [x] T058 [US3] Filter outputs to airplane/helicopter/bird/drone + threshold in `src/inference/detector.py`
+- [x] T059 [US3] Implement `ScanPipeline` (enable flag, stride, last FrameDetections) in `src/orchestration/scan_pipeline.py`
+- [x] T060 [US3] Compose PlaybackController frames → detector in `src/orchestration/scan_pipeline.py` without UI importing ultralytics
+- [x] T081 [US3] Record last infer duration_ms on `ScanPipeline` and expose `last_lag_warning` when duration_ms > configurable threshold (default 2000) in `src/orchestration/scan_pipeline.py` (SC-006)
+- [x] T061 [P] [US3] Implement overlay drawing helpers in `src/ui/components/detection_overlay.py`
+- [x] T062 [US3] Wire Live Scan toggle + overlay into `src/ui/app.py` via orchestration only
+- [x] T063 [US3] Re-run US3 tests until green (still no weight download in unit/contract): `pytest tests/contract/test_detector_protocol.py tests/unit/test_null_detector.py tests/unit/test_detector.py tests/unit/test_scan_pipeline.py tests/unit/test_detection_overlay.py tests/integration/test_upload_play_scan.py -q`
 
 **Checkpoint**: Live scan optional; player still independent
 
@@ -166,20 +166,20 @@
 
 ### Tests for User Story 4 (TDD) ⚠️
 
-- [ ] T064 [P] [US4] Write failing unit tests for factory returns NullDetector when `backend: null` in `tests/unit/test_detector_factory.py`
-- [ ] T065 [P] [US4] Write failing unit tests for missing weights → DetectorNotReady + player unaffected in `tests/unit/test_detector_factory.py`
-- [ ] T082 [P] [US4] Write failing unit tests for factory backends `yolov8`, `yolov9`, `yolo_world`, and `custom` (weights_path required) in `tests/unit/test_detector_factory.py`
-- [ ] T066 [P] [US4] Write failing unit tests that UI/orchestration import graph excludes ultralytics from `src/ui/` in `tests/unit/test_loose_coupling_imports.py`
-- [ ] T067 [P] [US4] Write failing integration test player-only mode (SC-005) in `tests/integration/test_player_without_scanner.py`
-- [ ] T068 [US4] Confirm US4 tests fail: `pytest tests/unit/test_detector_factory.py tests/unit/test_loose_coupling_imports.py tests/integration/test_player_without_scanner.py -q`
+- [x] T064 [P] [US4] Write failing unit tests for factory returns NullDetector when `backend: null` in `tests/unit/test_detector_factory.py`
+- [x] T065 [P] [US4] Write failing unit tests for missing weights → DetectorNotReady + player unaffected in `tests/unit/test_detector_factory.py`
+- [x] T082 [P] [US4] Write failing unit tests for factory backends `yolov8`, `yolov9`, `yolo_world`, and `custom` (weights_path required) in `tests/unit/test_detector_factory.py`
+- [x] T066 [P] [US4] Write failing unit tests that UI/orchestration import graph excludes ultralytics from `src/ui/` in `tests/unit/test_loose_coupling_imports.py`
+- [x] T067 [P] [US4] Write failing integration test player-only mode (SC-005) in `tests/integration/test_player_without_scanner.py`
+- [x] T068 [US4] Confirm US4 tests fail: `pytest tests/unit/test_detector_factory.py tests/unit/test_loose_coupling_imports.py tests/integration/test_player_without_scanner.py -q`
 
 ### Implementation for User Story 4
 
-- [ ] T069 [US4] Implement detector factory/selector in `src/inference/factory.py` supporting `null` | `yolo_world` | `yolov8` | `yolov9` | `custom` via `config/detector.yaml` (same `AerialDetector` protocol; yolov9/custom may lazy-load Ultralytics with configured weights)
-- [ ] T070 [US4] Surface non-blocking scan-unavailable notice in `src/ui/app.py` / `src/ui/components/uploader.py` messaging helpers
-- [ ] T071 [US4] Ensure missing weights path never crashes playback session in `src/orchestration/scan_pipeline.py`
-- [ ] T072 [US4] Document swap instructions (config-only, including yolov8/yolov9/custom weights) in `README.md` under video player / detector section
-- [ ] T073 [US4] Re-run US4 tests until green: `pytest tests/unit/test_detector_factory.py tests/unit/test_loose_coupling_imports.py tests/integration/test_player_without_scanner.py -q`
+- [x] T069 [US4] Implement detector factory/selector in `src/inference/factory.py` supporting `null` | `yolo_world` | `yolov8` | `yolov9` | `custom` via `config/detector.yaml` (same `AerialDetector` protocol; yolov9/custom may lazy-load Ultralytics with configured weights)
+- [x] T070 [US4] Surface non-blocking scan-unavailable notice in `src/ui/app.py` / `src/ui/components/uploader.py` messaging helpers
+- [x] T071 [US4] Ensure missing weights path never crashes playback session in `src/orchestration/scan_pipeline.py`
+- [x] T072 [US4] Document swap instructions (config-only, including yolov8/yolov9/custom weights) in `README.md` under video player / detector section
+- [x] T073 [US4] Re-run US4 tests until green: `pytest tests/unit/test_detector_factory.py tests/unit/test_loose_coupling_imports.py tests/integration/test_player_without_scanner.py -q`
 
 **Checkpoint**: Loose coupling verified by tests
 
@@ -191,22 +191,22 @@
 
 ### Tests (TDD) — Performance metrics
 
-- [ ] T083 [P] Write failing unit tests for metrics logger (infer_ms, optional memory_mb, device string) in `tests/unit/test_scan_metrics.py` with fake timings (no GPU required)
+- [x] T083 [P] Write failing unit tests for metrics logger (infer_ms, optional memory_mb, device string) in `tests/unit/test_scan_metrics.py` with fake timings (no GPU required)
 
 ### Implementation — Performance metrics (D1)
 
-- [ ] T084 Implement `ScanMetrics` recorder/logger in `src/orchestration/scan_metrics.py` (frame_index, infer_ms, memory_mb optional, device; structured log line)
-- [ ] T085 Wire `ScanMetrics` into `src/orchestration/scan_pipeline.py` on each infer; read `lag_warn_ms` / metrics flags from `config/detector.yaml`
-- [ ] T086 Re-run metrics tests until green: `pytest tests/unit/test_scan_metrics.py tests/unit/test_scan_pipeline.py -q -k lag`
+- [x] T084 Implement `ScanMetrics` recorder/logger in `src/orchestration/scan_metrics.py` (frame_index, infer_ms, memory_mb optional, device; structured log line)
+- [x] T085 Wire `ScanMetrics` into `src/orchestration/scan_pipeline.py` on each infer; read `lag_warn_ms` / metrics flags from `config/detector.yaml`
+- [x] T086 Re-run metrics tests until green: `pytest tests/unit/test_scan_metrics.py tests/unit/test_scan_pipeline.py -q -k lag`
 
 ### Docs & quality gates
 
-- [ ] T074 [P] Add optional CLI entry for player/scan without UI in `src/main.py` (uses same session/playback/detector ports)
-- [ ] T075 [P] Fill real defaults in `config/video_player.yaml` and `config/detector.yaml` per contracts (include `backend` enum + `lag_warn_ms` + metrics toggles)
-- [ ] T076 Run full suite with coverage gate locally: `pytest tests/ -q --cov=src --cov-fail-under=85`
-- [ ] T077 [P] Ensure Black/Ruff/typecheck pass on new modules under `src/` and `tests/`
-- [ ] T078 Execute manual checklist in `specs/001-yolo-video-player/quickstart.md` (V1–V5) and note results including SC-006 sync check
-- [ ] T079 [P] Update `README.md` run instructions for `streamlit run src/ui/app.py`, config backends (`yolov8`/`yolov9`/`custom`), and metrics logging
+- [x] T074 [P] Add optional CLI entry for player/scan without UI in `src/main.py` (uses same session/playback/detector ports)
+- [x] T075 [P] Fill real defaults in `config/video_player.yaml` and `config/detector.yaml` per contracts (include `backend` enum + `lag_warn_ms` + metrics toggles)
+- [x] T076 Run full suite with coverage gate locally: `pytest tests/ -q --cov=src --cov-fail-under=85`
+- [x] T077 [P] Ensure Black/Ruff/typecheck pass on new modules under `src/` and `tests/`
+- [x] T078 Execute manual checklist in `specs/001-yolo-video-player/quickstart.md` (V1–V5) and note results including SC-006 sync check
+- [x] T079 [P] Update `README.md` run instructions for `streamlit run src/ui/app.py`, config backends (`yolov8`/`yolov9`/`custom`), and metrics logging
 
 ---
 

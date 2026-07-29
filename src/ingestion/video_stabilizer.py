@@ -143,9 +143,7 @@ class VideoStabilizer:
             raise ValueError("Feature points cannot be None.")
 
         if len(old_points) < 3 or len(new_points) < 3:
-            raise ValueError(
-                "At least three matching feature points are required."
-            )
+            raise ValueError("At least three matching feature points are required.")
 
         matrix, _ = cv2.estimateAffinePartial2D(
             old_points,
@@ -182,9 +180,7 @@ class VideoStabilizer:
             raise ValueError("Transform matrix cannot be None.")
 
         if transform.shape != (2, 3):
-            raise ValueError(
-                "Transform matrix must have shape (2, 3)."
-            )
+            raise ValueError("Transform matrix must have shape (2, 3).")
 
         height, width = frame.shape[:2]
 
@@ -249,6 +245,7 @@ class VideoStabilizer:
                 smoothed[index, column] = min(moving_average, values[index])
 
         return smoothed
+
     def crop_frame(
         self,
         frame: np.ndarray,
@@ -272,13 +269,11 @@ class VideoStabilizer:
             return frame.copy()
 
         if border * 2 >= height or border * 2 >= width:
-            raise ValueError(
-                "Border is too large for the frame dimensions."
-            )
+            raise ValueError("Border is too large for the frame dimensions.")
 
         cropped = frame[
-            border: height - border,
-            border: width - border,
+            border : height - border,
+            border : width - border,
         ]
 
         return cv2.resize(
@@ -342,5 +337,3 @@ class VideoStabilizer:
         )
 
         return stabilized
-    
-    

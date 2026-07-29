@@ -1,0 +1,18 @@
+backend: "yolo_world"          # null | yolo_world | yolov8 | yolov9 | custom
+weights_path: "models/yolov8s-world.pt"   # required for yolov8 | yolov9 | custom | yolo_world
+model_version: "v8"            # informational; factory uses backend + weights_path
+class_prompts:
+  - airplane
+  - helicopter
+  - bird
+  - drone
+confidence_threshold: 0.25
+device: "auto"                 # auto | cpu | cuda
+frame_stride: 2
+lazy_load: true
+lag_warn_ms: 2000              # SC-006: warn when single infer exceeds this
+metrics:
+  enabled: true
+  log_infer_ms: true
+  log_memory_mb: true          # best-effort; may be 0 if unavailable
+  log_device: true

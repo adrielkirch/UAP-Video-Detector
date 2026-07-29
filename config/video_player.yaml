@@ -1,0 +1,5 @@
+accepted_extensions: [".mp4", ".mov", ".mkv", ".avi", ".webm"]
+max_upload_bytes: 2147483648  # 2 GiB soft limit; 0 = unlimited
+raw_dir: "data/raw"
+copy_uploads_to_raw: false
+seek_step_ms: 1000

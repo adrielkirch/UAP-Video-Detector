@@ -1,0 +1,2 @@
+# Keep this directory in version control but ignore model weights
+# Model weights (.pt files) should not be committed to the repository
