@@ -1,5 +1,5 @@
-backend: "yolo_world"          # null | yolo_world | yolov8 | yolov9 | custom
-weights_path: "models/yolov8s-world.pt"   # required for yolov8 | yolov9 | custom | yolo_world
+backend: "yolov8"             # null | yolo_world | yolov8 | yolov9 | custom
+weights_path: "yolov8n.pt"       # YOLOv8 nano auto-downloads on first use
 model_version: "v8"            # informational; factory uses backend + weights_path
 class_prompts:
   - airplane

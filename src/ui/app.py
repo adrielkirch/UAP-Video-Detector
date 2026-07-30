@@ -42,6 +42,12 @@ def initialize_session_state():
             st.session_state.playback_controller.on_video_changed
         )
         st.session_state.playback_controller.attach(st.session_state.video_session)
+    
+    # Ensure wiring is maintained after rerun
+    else:
+        # Re-establish connections that might be lost on rerun
+        if hasattr(st.session_state, 'video_session') and hasattr(st.session_state, 'playback_controller'):
+            st.session_state.playback_controller.attach(st.session_state.video_session)
 
     if "scan_pipeline" not in st.session_state:
         st.session_state.scan_pipeline = ScanPipeline()
@@ -110,6 +116,15 @@ def main():
 
     # Main content area
     active_video = st.session_state.video_session.get_active()
+
+    # Debug info (can be removed later)
+    if st.checkbox("🔍 Show Debug Info", key="debug_toggle"):
+        st.write("**Debug Information:**")
+        st.write(f"- Active video: {active_video}")
+        if active_video:
+            st.write(f"- Video name: {active_video.display_name}")
+            st.write(f"- Video status: {active_video.status}")
+        st.write(f"- Last upload success: {st.session_state.get('last_upload_success', 'None')}")
 
     if active_video is None:
         # No video loaded state
@@ -248,7 +263,6 @@ def main():
                     current_frame,
                     channels="BGR",
                     caption="Video with Detection Overlays",
-                    key="main_frame_with_overlays",
                 )
 
                 # Performance info

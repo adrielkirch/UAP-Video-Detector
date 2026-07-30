@@ -160,7 +160,7 @@ class TestProgressDisplay:
         render_progress_display(playback_state, key="test_progress")
 
         # Should show progress (15/60 = 0.25)
-        mock_progress.assert_called_once_with(0.25, key="test_progress_bar")
+        mock_progress.assert_called_once_with(0.25)
         mock_text.assert_called_once_with("00:15 / 01:00")
 
     @patch("streamlit.progress")
@@ -173,7 +173,7 @@ class TestProgressDisplay:
         render_progress_display(playback_state, key="test_zero_duration")
 
         # Should show 0 progress
-        mock_progress.assert_called_once_with(0.0, key="test_zero_duration_bar")
+        mock_progress.assert_called_once_with(0.0)
         mock_text.assert_called_once_with("00:00 / 00:00")
 
 

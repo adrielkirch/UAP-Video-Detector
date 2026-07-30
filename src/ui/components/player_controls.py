@@ -70,16 +70,16 @@ def render_progress_display(
 
     Args:
         playback_state: Current playback state
-        key: Unique key for Streamlit widgets
+        key: Unique key for Streamlit widgets (not used for progress bar)
     """
-    # Calculate progress
+    # Calculate progress value
     if playback_state.duration_ms > 0:
-        progress = playback_state.position_ms / playback_state.duration_ms
+        progress_value = playback_state.position_ms / playback_state.duration_ms
     else:
-        progress = 0.0
+        progress_value = 0.0
 
-    # Progress bar
-    st.progress(progress, key=f"{key}_bar")
+    # Progress bar without key parameter
+    st.progress(progress_value)
 
     # Time display
     current_time = _format_time_ms(playback_state.position_ms)
@@ -164,7 +164,6 @@ def render_frame_display(
             frame,
             channels="BGR",  # OpenCV uses BGR format
             caption="Current Frame",
-            key=f"{key}_image",
         )
     else:
         st.info("📺 No frame available")

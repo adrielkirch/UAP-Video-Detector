@@ -63,30 +63,37 @@ def render_video_uploader(
     )
 
     if uploaded_file is not None:
-        try:
-            # Save uploaded file temporarily
-            temp_path = Path("temp") / uploaded_file.name
-            temp_path.parent.mkdir(exist_ok=True)
+        # Check if this is a new file or already processed
+        if f"uploaded_{uploaded_file.name}" not in st.session_state:
+            try:
+                # Save uploaded file temporarily
+                temp_path = Path("temp") / uploaded_file.name
+                temp_path.parent.mkdir(exist_ok=True)
 
-            with open(temp_path, "wb") as f:
-                f.write(uploaded_file.getbuffer())
+                with open(temp_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
 
-            # Set as active video in session
-            session.set_from_path(str(temp_path))
-            upload_occurred = True
+                # Set as active video in session
+                loaded_video = session.set_from_path(str(temp_path))
+                upload_occurred = True
 
-            st.success(f"✅ Successfully loaded: **{uploaded_file.name}**")
+                # Mark file as processed in session state
+                st.session_state[f"uploaded_{uploaded_file.name}"] = True
+                st.session_state.last_upload_success = uploaded_file.name
 
-            # Auto-rerun to update UI
-            st.rerun()
+                st.success(f"✅ Successfully loaded: **{uploaded_file.name}**")
+                st.info("🔄 Video loaded! The player will appear below.")
 
-        except UploadRejectedError as e:
-            error_message = str(e)
-            st.error(f"❌ Upload failed: {error_message}")
+                # Force immediate rerun to update UI
+                st.rerun()
 
-        except Exception as e:
-            error_message = f"Unexpected error: {str(e)}"
-            st.error(f"❌ Upload failed: {error_message}")
+            except UploadRejectedError as e:
+                error_message = str(e)
+                st.error(f"❌ Upload failed: {error_message}")
+
+            except Exception as e:
+                error_message = f"Unexpected error: {str(e)}"
+                st.error(f"❌ Upload failed: {error_message}")
 
     return upload_occurred, error_message
 

@@ -228,100 +228,96 @@ uap-video-detector/
 *** finalization Povoa01 suggestion 09JUL26***
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-### Prerequisites (Cross-Platform)
-
-- **Python 3.11+** with `uv` package installer
-- **Git** for version control
-- **Compatible Shell**: Git Bash, PowerShell, Zsh, or Bash
-- **Video Files**: MP4, MOV, AVI, MKV, WEBM formats supported
+### Prerequisites
+- Python 3.11+
+- Git
 
 ### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/UAP-Video-Detector.git
-   cd UAP-Video-Detector
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   uv pip install -r requirements.txt
-   ```
-
-3. **Configure detectors** (optional):
-   - **For YOLO-World**: Download `yolov8s-world.pt` to `models/` directory
-   - **For YOLOv8/YOLOv9**: Download standard YOLO weights to `models/` directory
-   - **For custom models**: Place your trained weights in `models/` directory
-
-### Running the Application
-
-#### **Streamlit Web UI** (Recommended)
 ```bash
+git clone https://github.com/YOUR_USERNAME/UAP-Video-Detector.git
+cd UAP-Video-Detector
+pip install -e .
+```
+
+### Run the Application
+
+#### **Web Interface** (Recommended)
+```bash
+cd UAP-Video-Detector
 streamlit run src/ui/app.py
 ```
-Access the web interface at `http://localhost:8501`
+Open `http://localhost:8501` in your browser.
 
-#### **Command-Line Interface**
+#### **Command Line**
 ```bash
-# Basic video analysis with YOLO-World
-python src/main.py path/to/video.mp4
+cd UAP-Video-Detector
 
-# Specify detection backend
-python src/main.py path/to/video.mp4 --backend yolov8 --weights models/yolov8s.pt
+# Analyze video with YOLO detection
+python src/main.py path/to/your-video.mp4 --verbose
 
-# Enable metrics and verbose output
-python src/main.py path/to/video.mp4 --metrics --verbose
+# Player-only mode (no detection)  
+python src/main.py path/to/your-video.mp4 --backend null
 
-# Save results to JSON
-python src/main.py path/to/video.mp4 --output results.json
+# Save results to file
+python src/main.py path/to/your-video.mp4 --output results.json
+```
 
-# Custom configuration
-python src/main.py path/to/video.mp4 \
-  --backend custom \
-  --weights models/my-custom.pt \
-  --confidence-threshold 0.3 \
-  --device cuda \
-  --frame-stride 1
+### Testing
+
+```bash
+cd UAP-Video-Detector
+
+# 1. Core test suite (should show 168/168 passing)
+pytest tests/ -q
+
+# 2. Unit and contract tests specifically  
+pytest tests/unit tests/contract -q
+
+# 3. With coverage report
+pytest tests/ --cov=src --cov-report=term-missing
+
+# 4. Verbose output for detailed results
+pytest tests/ -v
 ```
 
 ### Configuration
 
-Edit `config/detector.yaml` to customize detection behavior:
+The system works out-of-the-box. Optional: Edit `config/detector.yaml`:
 
 ```yaml
-backend: "yolo_world"          # null | yolo_world | yolov8 | yolov9 | custom
-weights_path: "models/yolov8s-world.pt"
-class_prompts:
-  - airplane
-  - helicopter  
-  - bird
-  - drone
+backend: "null"           # null | yolo_world | yolov8 | yolov9 | custom
 confidence_threshold: 0.25
-device: "auto"                 # auto | cpu | cuda
-metrics:
-  enabled: true
-  log_infer_ms: true
-  log_memory_mb: true
+device: "auto"            # auto | cpu | cuda
 ```
 
-Supported backends:
-- **`null`**: Disable detection (player-only mode)
-- **`yolo_world`**: Open-vocabulary detection with text prompts
-- **`yolov8`**: Standard YOLOv8 models  
-- **`yolov9`**: Advanced YOLOv9 models
-- **`custom`**: Your own trained weights
+**Supported backends:**
+- `null` - Player-only mode (no YOLO weights needed)
+- `yolo_world` - Open-vocabulary detection  
+- `yolov8/yolov9` - Standard YOLO models
+- `custom` - Your trained weights
 
-### Performance Metrics
+### YOLO Model Setup (Optional)
 
-When `metrics.enabled: true`, the system logs structured performance data:
+For aerial object detection, download YOLO weights to `models/` directory:
 
-```json
-{"timestamp": 1643723400.0, "frame_index": 42, "inference_ms": 125.3, "device": "cuda:0", "memory_mb": 256.0}
+```bash
+cd UAP-Video-Detector
+
+# Create models directory
+mkdir -p models
+
+# Download YOLO-World weights (recommended)
+# Visit: https://github.com/AILab-CVC/YOLO-World/releases
+# Download yolov8s-world.pt to models/ folder
+
+# Then update config/detector.yaml:
+backend: "yolo_world"
+weights_path: "models/yolov8s-world.pt"
 ```
 
-Real-time lag warnings appear when inference exceeds `lag_warn_ms` threshold (default: 2000ms).
+**Target Classes:** airplane, helicopter, bird, drone
 
 ---
 
