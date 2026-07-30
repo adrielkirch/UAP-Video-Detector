@@ -4,6 +4,12 @@ venv/
 # Python cache
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
 
 # Pytest
 .pytest_cache/
@@ -14,6 +20,7 @@ __pycache__/
 # Coverage
 .coverage
 htmlcov/
+.coverage.*
 
 # IDE
 .vscode/
@@ -22,3 +29,35 @@ htmlcov/
 # OS
 .DS_Store
 Thumbs.db
+
+# Project-specific
+# Model weights (not committed per constitution)
+models/*.pt
+models/*.onnx
+models/*.torchscript
+
+# Video data (user uploads)
+data/raw/*.mp4
+data/raw/*.mov
+data/raw/*.mkv
+data/raw/*.avi
+data/raw/*.webm
+
+# Processed data
+data/processed/*
+
+# Environment variables
+.env*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.swp
+temp/
+
+# Uploaded files (temporary storage)
+temp/*

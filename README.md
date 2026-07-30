@@ -228,6 +228,99 @@ uap-video-detector/
 *** finalization Povoa01 suggestion 09JUL26***
 ---
 
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.11+
+- Git
+
+### Installation
+```bash
+git clone https://github.com/YOUR_USERNAME/UAP-Video-Detector.git
+cd UAP-Video-Detector
+pip install -e .
+```
+
+### Run the Application
+
+#### **Web Interface** (Recommended)
+```bash
+cd UAP-Video-Detector
+streamlit run src/ui/app.py
+```
+Open `http://localhost:8501` in your browser.
+
+#### **Command Line**
+```bash
+cd UAP-Video-Detector
+
+# Analyze video with YOLO detection
+python src/main.py path/to/your-video.mp4 --verbose
+
+# Player-only mode (no detection)  
+python src/main.py path/to/your-video.mp4 --backend null
+
+# Save results to file
+python src/main.py path/to/your-video.mp4 --output results.json
+```
+
+### Testing
+
+```bash
+cd UAP-Video-Detector
+
+# 1. Core test suite (should show 168/168 passing)
+pytest tests/ -q
+
+# 2. Unit and contract tests specifically  
+pytest tests/unit tests/contract -q
+
+# 3. With coverage report
+pytest tests/ --cov=src --cov-report=term-missing
+
+# 4. Verbose output for detailed results
+pytest tests/ -v
+```
+
+### Configuration
+
+The system works out-of-the-box. Optional: Edit `config/detector.yaml`:
+
+```yaml
+backend: "null"           # null | yolo_world | yolov8 | yolov9 | custom
+confidence_threshold: 0.25
+device: "auto"            # auto | cpu | cuda
+```
+
+**Supported backends:**
+- `null` - Player-only mode (no YOLO weights needed)
+- `yolo_world` - Open-vocabulary detection  
+- `yolov8/yolov9` - Standard YOLO models
+- `custom` - Your trained weights
+
+### YOLO Model Setup (Optional)
+
+For aerial object detection, download YOLO weights to `models/` directory:
+
+```bash
+cd UAP-Video-Detector
+
+# Create models directory
+mkdir -p models
+
+# Download YOLO-World weights (recommended)
+# Visit: https://github.com/AILab-CVC/YOLO-World/releases
+# Download yolov8s-world.pt to models/ folder
+
+# Then update config/detector.yaml:
+backend: "yolo_world"
+weights_path: "models/yolov8s-world.pt"
+```
+
+**Target Classes:** airplane, helicopter, bird, drone
+
+---
+
 ## 🤝 Contributing
 
 We welcome contributions from software engineers, ML researchers, and data-driven UFOlogists alike! **All development environments are supported** — contribute using your preferred setup.
@@ -270,6 +363,88 @@ This project supports **30+ AI coding agents** and **all major platforms**:
 - **OS**: Windows, macOS, Linux
 
 --
+
+## 🔍 Aerial Object Scanner Configuration
+
+The scanner is **optional** and **replaceable** - the video player works independently.
+
+### Supported Detection Backends
+
+| Backend | Description | Weights Required |
+|---------|-------------|------------------|
+| `null` | No detection (player-only mode) | No |
+| `yolo_world` | YOLO-World model for open-vocabulary detection | Yes |
+| `yolov8` | YOLOv8 standard model | Yes |
+| `yolov9` | YOLOv9 model | Yes |
+| `custom` | Custom YOLO weights | Yes |
+
+### Detector Configuration
+
+Edit `config/detector.yaml` to swap detection backends:
+
+```yaml
+# Disable scanner (player-only mode)
+backend: null
+
+# Enable YOLO-World (recommended)
+backend: "yolo_world"
+weights_path: "models/yolov8s-world.pt"
+confidence_threshold: 0.25
+class_prompts:
+  - airplane
+  - helicopter  
+  - bird
+  - drone
+
+# Use YOLOv8 standard
+backend: "yolov8"
+weights_path: "models/yolov8n.pt"
+
+# Use YOLOv9
+backend: "yolov9" 
+weights_path: "models/yolov9c.pt"
+
+# Use custom weights
+backend: "custom"
+weights_path: "models/my-custom-aerial.pt"
+```
+
+### Obtaining Model Weights
+
+**YOLO-World (Recommended):**
+```bash
+# Download YOLO-World weights
+mkdir -p models
+curl -L "https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8s-world.pt" -o models/yolov8s-world.pt
+```
+
+**Standard YOLO:**
+```bash
+# YOLOv8 - will auto-download on first use
+backend: "yolov8"
+weights_path: "yolov8n.pt"  # Auto-downloads
+
+# YOLOv9 - download manually
+curl -L "https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9c.pt" -o models/yolov9c.pt
+```
+
+**Custom Training:**
+```bash
+# Train your own aerial detection model
+yolo train data=aerial-dataset.yaml model=yolov8n.pt epochs=100
+# Use the resulting best.pt as your custom weights
+```
+
+### Scanner Behavior
+
+- **Missing/Invalid Configuration**: Falls back to null detector (player continues)
+- **Missing Weights**: Shows warning, disables scanner (player continues)  
+- **YOLO Import Error**: Uses null detector (player continues)
+- **Runtime Errors**: Auto-disables scanner to prevent crashes
+
+The video player **never crashes** due to scanner issues - it gracefully degrades to player-only mode.
+
+---
 
 ## 🚀 Future Horizons & Roadmap
 
