@@ -1,0 +1,19 @@
+tests/unit/test_detector.py
+  s_beb8511bca9c7c::t_f7c2e1ef819e8a 34,82,131,176,207,240
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "9797266b1d96b210897f7c14d3a879946e15baf3",
+  "prompts": {},
+  "sessions": {
+    "s_beb8511bca9c7c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ebafba4b-53d5-4952-9fab-bb2cfacb8e18",
+        "model": "grok-4.6"
+      },
+      "human_author": "Adriel Henrique de Mello Kirch <adrielhenriquedemello.kirch@wexinc.com>"
+    }
+  }
+}
