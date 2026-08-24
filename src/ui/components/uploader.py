@@ -7,14 +7,19 @@ and user feedback. Follows loose coupling principle - no YOLO imports.
 
 import streamlit as st
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Callable, Optional, Tuple
 
 from ...ingestion.video_session import VideoSession
 from ...ingestion.exceptions import UploadRejectedError
 
 
 def render_video_uploader(
-    session: VideoSession, key: str = "video_uploader"
+    session: VideoSession,
+    key: str = "video_uploader",
+    *,
+    heading: Optional[str] = "Upload a video",
+    show_status: bool = True,
+    on_before_load: Optional[Callable[[], None]] = None,
 ) -> Tuple[bool, Optional[str]]:
     """
     Render video file uploader widget with session integration.
@@ -22,6 +27,9 @@ def render_video_uploader(
     Args:
         session: VideoSession instance to manage uploads
         key: Unique key for Streamlit widget
+        heading: Optional section heading; None hides it
+        show_status: Whether to show active-video status above the uploader
+        on_before_load: Optional hook to drop prior artifacts before replace
 
     Returns:
         Tuple of (upload_occurred, error_message)
@@ -31,14 +39,13 @@ def render_video_uploader(
     upload_occurred = False
     error_message = None
 
-    st.subheader("📁 Video Upload")
+    if heading:
+        st.subheader(heading)
 
-    # Show current active video status
     active_video = session.get_active()
-    if active_video:
-        st.success(f"✅ Active video: **{active_video.display_name}**")
+    if show_status and active_video:
+        st.success(f"Active video: **{active_video.display_name}**")
 
-        # Show video metadata if available
         if active_video.duration_ms > 0:
             duration_sec = active_video.duration_ms / 1000
             st.caption(
@@ -47,14 +54,10 @@ def render_video_uploader(
                 f"FPS: {active_video.fps:.1f}"
             )
 
-        # Clear button
-        if st.button("🗑️ Clear Video", key=f"{key}_clear"):
+        if st.button("Clear video", key=f"{key}_clear"):
             session.clear()
             st.rerun()
-    else:
-        st.info("No video loaded. Upload a video file to begin.")
 
-    # File uploader
     uploaded_file = st.file_uploader(
         "Choose a video file",
         type=["mp4", "mov", "avi", "mkv", "webm"],
@@ -73,6 +76,9 @@ def render_video_uploader(
                 with open(temp_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
 
+                if on_before_load is not None:
+                    on_before_load()
+
                 # Set as active video in session
                 loaded_video = session.set_from_path(str(temp_path))
                 upload_occurred = True
@@ -81,8 +87,7 @@ def render_video_uploader(
                 st.session_state[f"uploaded_{uploaded_file.name}"] = True
                 st.session_state.last_upload_success = uploaded_file.name
 
-                st.success(f"✅ Successfully loaded: **{uploaded_file.name}**")
-                st.info("🔄 Video loaded! The player will appear below.")
+                st.success(f"Loaded: **{uploaded_file.name}**")
 
                 # Force immediate rerun to update UI
                 st.rerun()

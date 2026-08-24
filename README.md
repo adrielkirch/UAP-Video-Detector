@@ -136,7 +136,7 @@ Scaffolding lives in `.specify/` (templates, scripts, memory). Feature specs are
 * Python 3.10 or higher
 * Docker & Docker Compose (Optional, but recommended for instant environment setup)
 * CUDA-compatible GPU (Highly recommended for real-time video processing)
-```
+
 <img width="320" height="320" alt="image" src="https://github.com/user-attachments/assets/e5fa3ef7-1510-4076-abac-e1e009351039" />
 <br><br><br>
 
@@ -144,35 +144,64 @@ Scaffolding lives in `.specify/` (templates, scripts, memory). Feature specs are
 
 
 ### Local Installation
+
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/UAP-Video-Detector.git](https://github.com/YOUR_USERNAME/UAP-Video-Detector.git)
+   git clone https://github.com/YOUR_USERNAME/UAP-Video-Detector.git
    cd UAP-Video-Detector
+   ```
 
+2. **Create a virtual environment** (do this once after cloning).
 
+   A virtual environment is a project-local folder (`.venv`) with its own Python interpreter and packages. It keeps Streamlit, OpenCV, and YOLO isolated from your system Python.
 
-2. **Set up a virtual environment:**
-```bash
-python -bin/venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   ```bash
+   python -m venv .venv
+   ```
 
-```
+   On macOS or Linux, use `python3 -m venv .venv` if the `python` command is not found.
 
+3. **Activate the virtual environment** (do this every time you open a new terminal in this project).
 
-3. **Install dependencies:**
-```bash
-pip install -r requirements.txt
+   | Shell | Activate command |
+   |-------|------------------|
+   | Windows PowerShell | `.\.venv\Scripts\Activate.ps1` |
+   | Windows Command Prompt | `.venv\Scripts\activate.bat` |
+   | macOS / Linux (bash, zsh) | `source .venv/bin/activate` |
 
-```
+   Activation worked if your prompt starts with `(.venv)`.
 
+   If PowerShell blocks the script with an execution-policy error, run this once in the same window and activate again:
+
+   ```powershell
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+   .\.venv\Scripts\Activate.ps1
+   ```
+
+   Leave the environment later with `deactivate`.
+
+4. **Install dependencies** (the virtual environment must be active):
+   ```bash
+   python -m pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
 
 ### Running the Detector
 
-Place your input video file into the `data/raw/` folder and execute the main pipeline:
+**Web interface (recommended):**
 
 ```bash
-python src/main.py --source data/raw/sample_sky_feed.mp4 --conf 0.25
+streamlit run src/ui/app.py
+```
 
+Then open `http://localhost:8501` in your browser.
+
+The video layer is an HTML5 / Plyr player (not `st.video`). Upload sits in the **center** until a file is loaded. `.streamlit/config.toml` turns on `enableStaticServing` so playable copies can be served from `src/ui/static/play/`. Restart Streamlit after changing that file. Annotated scan output is remuxed to H.264 with `imageio-ffmpeg` (already in `requirements.txt`).
+
+**Command line:**
+
+```bash
+python src/main.py path/to/your-video.mp4 --verbose
 ```
 
 ---
@@ -199,9 +228,9 @@ uap-video-detector/
 │   ├── inference/            # YOLO detection wrapper and anomaly filtering rules
 │   ├── orchestration/        # Routing engines, local storage, or cloud logging handlers
 │   ├── ui/                   
-│   │   ├── app.py            # Streamlit dashboard layout or Frontend server entry
-│   │   ├── components/       # Custom video players, metric displays, tables
-│   │   └── assets/           # UI CSS, custom logos, or web styling
+│   │   ├── app.py            # Streamlit dashboard (centered upload + player)
+│   │   ├── components/       # HTML5/Plyr player, uploader, overlays
+│   │   └── static/           # Served player assets (Plyr + staged play copies)
 │   └── main.py               # Application entry point
 ├── tests/                    # Core pipeline unit tests (pytest)
 ├── docker-compose.yml        # Multi-container local execution environment
@@ -235,9 +264,17 @@ uap-video-detector/
 - Git
 
 ### Installation
+
+Create and activate a virtual environment first (see **Local Installation** above), then install the project:
+
 ```bash
 git clone https://github.com/YOUR_USERNAME/UAP-Video-Detector.git
 cd UAP-Video-Detector
+python -m venv .venv
+# Windows PowerShell:  .\.venv\Scripts\Activate.ps1
+# Windows CMD:         .venv\Scripts\activate.bat
+# macOS / Linux:       source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -e .
 ```
 

@@ -20,6 +20,8 @@ Represents the single video loaded for the session.
 | frame_count | int ≥ 0 | Total frames if known |
 | fps | float > 0 | Nominal FPS if known |
 | status | enum | `ready` \| `invalid` \| `cleared` |
+| width | int ≥ 0 | Frame width in pixels if known; 0 if unknown |
+| height | int ≥ 0 | Frame height in pixels if known; 0 if unknown |
 
 **Validation**:
 - Path must exist and pass format validator + OpenCV open

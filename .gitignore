@@ -1,4 +1,5 @@
 # Virtual Environment
+.venv/
 venv/
 
 # Python cache
@@ -61,3 +62,7 @@ temp/
 
 # Uploaded files (temporary storage)
 temp/*
+
+# Staged HTML5 player copies
+src/ui/static/play/*
+!src/ui/static/play/.gitkeep

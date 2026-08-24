@@ -94,6 +94,8 @@ class TestVideoSession:
         mock_cap.get.side_effect = lambda prop: {
             cv2.CAP_PROP_FRAME_COUNT: 900,
             cv2.CAP_PROP_FPS: 30.0,
+            cv2.CAP_PROP_FRAME_WIDTH: 720,
+            cv2.CAP_PROP_FRAME_HEIGHT: 480,
         }.get(prop, 0)
         mock_cv2.return_value = mock_cap
 
@@ -106,6 +108,8 @@ class TestVideoSession:
         assert active_video.display_name == "video.mp4"
         assert active_video.path == "/path/to/video.mp4"
         assert active_video.status == "ready"
+        assert active_video.width == 720
+        assert active_video.height == 480
         assert session.get_active() == active_video
         assert session.last_error is None
 

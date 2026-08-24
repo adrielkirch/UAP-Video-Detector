@@ -31,6 +31,8 @@ class ActiveVideo:
     frame_count: int
     fps: float
     status: str  # 'ready' | 'invalid' | 'cleared'
+    width: int = 0
+    height: int = 0
 
 
 class VideoSession:
@@ -58,12 +60,44 @@ class VideoSession:
                 "raw_dir": "data/raw",
                 "copy_uploads_to_raw": False,
                 "seek_step_ms": 1000,
+                "skip_step_ms": 10000,
+                "player_max_height_vh": 70,
+                "player_max_width_px": 960,
+                "player_max_height_px": 720,
+                "annotated_dir": "temp",
             }
 
         self._validator = FormatValidator(self._config)
         self._active_video: Optional[ActiveVideo] = None
         self.last_error: Optional[str] = None
         self._playback_callbacks = []  # Callbacks for playback controller
+
+    def get_seek_step_ms(self) -> int:
+        """Slider snap interval from video_player.yaml."""
+        return max(1, int(self._config.get("seek_step_ms", 1000)))
+
+    def get_skip_step_ms(self) -> int:
+        """Skip-forward/back interval from video_player.yaml."""
+        configured = self._config.get("skip_step_ms")
+        if configured is None:
+            return self.get_seek_step_ms() * 10
+        return max(1, int(configured))
+
+    def get_player_max_height_vh(self) -> int:
+        """Max player height as a viewport percentage, from video_player.yaml."""
+        return max(20, min(100, int(self._config.get("player_max_height_vh", 70))))
+
+    def get_annotated_dir(self) -> str:
+        """Directory for session-scoped annotated MP4 files."""
+        return str(self._config.get("annotated_dir", "temp"))
+
+    def get_player_max_width_px(self) -> int:
+        """Max displayed player width in pixels."""
+        return max(160, int(self._config.get("player_max_width_px", 960)))
+
+    def get_player_max_height_px(self) -> int:
+        """Max displayed player height in pixels."""
+        return max(160, int(self._config.get("player_max_height_px", 720)))
 
     def get_active(self) -> Optional[ActiveVideo]:
         """
@@ -110,6 +144,8 @@ class VideoSession:
                 # Get video metadata
                 frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
                 fps = cap.get(cv2.CAP_PROP_FPS)
+                width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
                 # Calculate duration
                 if fps > 0 and frame_count > 0:
@@ -129,6 +165,8 @@ class VideoSession:
                 frame_count=frame_count,
                 fps=fps,
                 status="ready",
+                width=max(0, width),
+                height=max(0, height),
             )
 
             # Replace active video (release prior resources if any)
