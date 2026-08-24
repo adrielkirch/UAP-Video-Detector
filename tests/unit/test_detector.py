@@ -31,7 +31,7 @@ class TestUltralyticsDetector:
         detector = UltralyticsDetector()
 
         # Mock config loading
-        with patch("src.inference.config.load_detector_config") as mock_config:
+        with patch("src.inference.detector.load_detector_config") as mock_config:
             mock_config.return_value = {
                 "backend": "yolo_world",
                 "weights_path": "models/yolov8s-world.pt",
@@ -79,7 +79,7 @@ class TestUltralyticsDetector:
         detector = UltralyticsDetector()
 
         # Mock config loading
-        with patch("src.inference.config.load_detector_config") as mock_config:
+        with patch("src.inference.detector.load_detector_config") as mock_config:
             mock_config.return_value = {
                 "backend": "yolo_world",
                 "weights_path": "models/yolov8s-world.pt",
@@ -128,7 +128,7 @@ class TestUltralyticsDetector:
         detector = UltralyticsDetector()
 
         # Mock config with 0.25 threshold
-        with patch("src.inference.config.load_detector_config") as mock_config:
+        with patch("src.inference.detector.load_detector_config") as mock_config:
             mock_config.return_value = {
                 "backend": "yolo_world",
                 "weights_path": "models/yolov8s-world.pt",
@@ -173,7 +173,7 @@ class TestUltralyticsDetector:
         detector = UltralyticsDetector()
 
         # Mock config loading
-        with patch("src.inference.config.load_detector_config") as mock_config:
+        with patch("src.inference.detector.load_detector_config") as mock_config:
             mock_config.return_value = {
                 "backend": "yolo_world",
                 "weights_path": "models/yolov8s-world.pt",
@@ -204,7 +204,7 @@ class TestUltralyticsDetector:
         detector = UltralyticsDetector()
 
         # Mock config loading
-        with patch("src.inference.config.load_detector_config") as mock_config:
+        with patch("src.inference.detector.load_detector_config") as mock_config:
             mock_config.return_value = {
                 "backend": "yolo_world",
                 "weights_path": "models/yolov8s-world.pt",
@@ -237,7 +237,7 @@ class TestUltralyticsDetector:
         detector = UltralyticsDetector()
 
         # Mock config loading
-        with patch("src.inference.config.load_detector_config") as mock_config:
+        with patch("src.inference.detector.load_detector_config") as mock_config:
             mock_config.return_value = {
                 "backend": "yolo_world",
                 "weights_path": "models/yolov8s-world.pt",
