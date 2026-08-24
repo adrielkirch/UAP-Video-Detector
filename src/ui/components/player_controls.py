@@ -1,8 +1,8 @@
 """
-Streamlit player control widgets for video playback.
+Legacy Streamlit player control widgets.
 
-Provides UI components for play/pause/seek/stop controls with proper
-integration with PlaybackController. Follows loose coupling principle.
+Deprecated: the live UI uses streamlit-webrtc native controls instead of
+Play/Pause/Stop/Seek buttons driven by st.rerun(). Kept for existing unit tests.
 """
 
 import streamlit as st

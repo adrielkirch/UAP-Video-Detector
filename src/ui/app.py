@@ -1,32 +1,32 @@
 """
 Main Streamlit application for UAP Video Detector.
 
-Provides web interface for video upload, playback, and detection
-with proper session state management per project constitution.
+Centered upload until a video is loaded, then an HTML5 / Plyr player
+at native pixel size. YOLO overlays are baked into a temp H.264 MP4.
 """
 
-import streamlit as st
-from pathlib import Path
 import sys
+from pathlib import Path
+from typing import Optional
 
-# Add src to path for imports
+import streamlit as st
+
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from src.ingestion.video_session import VideoSession
-from src.ingestion.playback import PlaybackController
-from src.orchestration.scan_pipeline import ScanPipeline
 from src.inference.factory import DetectorFactory
-from src.ui.components.uploader import render_video_uploader, render_upload_status
-from src.ui.components.player_controls import (
-    render_playback_controls,
-    render_progress_display,
-    render_seek_control,
-    render_playback_status,
+from src.ingestion.playback import PlaybackController
+from src.ingestion.video_session import VideoSession
+from src.orchestration.scan_pipeline import ScanPipeline
+from src.orchestration.video_annotator import (
+    annotated_output_path,
+    remove_annotated_output,
+    write_annotated_video,
 )
-from src.ui.components.detection_overlay import (
-    draw_detections_on_frame,
-    draw_scan_status,
+from src.ui.components.native_player import (
+    clear_static_video,
+    render_native_player,
 )
+from src.ui.components.uploader import render_video_uploader
 
 
 def initialize_session_state():
@@ -36,36 +36,25 @@ def initialize_session_state():
 
     if "playback_controller" not in st.session_state:
         st.session_state.playback_controller = PlaybackController()
-
-        # Wire playback controller to video session
         st.session_state.video_session.add_playback_callback(
             st.session_state.playback_controller.on_video_changed
         )
         st.session_state.playback_controller.attach(st.session_state.video_session)
-    
-    # Ensure wiring is maintained after rerun
     else:
-        # Re-establish connections that might be lost on rerun
-        if hasattr(st.session_state, 'video_session') and hasattr(st.session_state, 'playback_controller'):
-            st.session_state.playback_controller.attach(st.session_state.video_session)
+        st.session_state.playback_controller.attach(st.session_state.video_session)
 
     if "scan_pipeline" not in st.session_state:
         st.session_state.scan_pipeline = ScanPipeline()
 
-        # Initialize detector via factory
         factory = DetectorFactory()
         try:
             detector = factory.create_detector("config/detector.yaml")
             st.session_state.detector_status = "ready"
-        except Exception as e:
-            # Fall back to safe detector (null)
+        except Exception as exc:
             detector = factory.create_safe_detector("config/detector.yaml")
-            st.session_state.detector_status = f"unavailable: {str(e)}"
+            st.session_state.detector_status = f"unavailable: {exc}"
 
-        # Store detector info for UI
         st.session_state.detector = detector
-
-        # Wire scan pipeline
         st.session_state.scan_pipeline.attach_detector(detector)
         st.session_state.scan_pipeline.attach_playback(
             st.session_state.playback_controller
@@ -74,224 +63,174 @@ def initialize_session_state():
     if "scan_enabled" not in st.session_state:
         st.session_state.scan_enabled = False
 
+    if "annotated_path" not in st.session_state:
+        st.session_state.annotated_path = None
 
-def main():
-    """Main Streamlit application entry point."""
-    st.set_page_config(page_title="UAP Video Detector", page_icon="🛸", layout="wide")
+    if "annotated_video_id" not in st.session_state:
+        st.session_state.annotated_video_id = None
 
-    initialize_session_state()
 
-    st.title("🛸 UAP Video Detector")
-    st.markdown(
-        "*Filter out the knowns to isolate the unknowns*\n\n"
-        "Upload and analyze video footage for unidentified aerial phenomena."
-    )
+def _sync_scan_state(scan_enabled: bool) -> None:
+    """Keep session toggle and ScanPipeline enable flags aligned."""
+    st.session_state.scan_enabled = scan_enabled
+    if scan_enabled:
+        st.session_state.scan_pipeline.enable_scan()
+    else:
+        st.session_state.scan_pipeline.disable_scan()
 
-    # Sidebar for upload controls
-    with st.sidebar:
-        st.header("📁 Video Management")
 
-        # Video upload section
-        upload_occurred, upload_error = render_video_uploader(
-            st.session_state.video_session, key="main_uploader"
+def _clear_video_artifacts() -> None:
+    """Drop staged player copies and the temp annotated MP4, keep session."""
+    active = st.session_state.video_session.get_active()
+    if active is not None:
+        clear_static_video(active.id)
+        clear_static_video(f"{active.id}-scan")
+    remove_annotated_output(st.session_state.get("annotated_path"))
+    st.session_state.annotated_path = None
+    st.session_state.annotated_video_id = None
+
+
+def _clear_session_video() -> None:
+    """Release the active video and its temp annotated MP4."""
+    _clear_video_artifacts()
+    st.session_state.scan_enabled = False
+    st.session_state.scan_pipeline.disable_scan()
+    st.session_state.video_session.clear()
+
+
+def _render_empty_state() -> None:
+    """Central upload area shown before a video is loaded."""
+    with st.container():
+        render_video_uploader(
+            st.session_state.video_session,
+            key="main_uploader",
+            heading="Upload a video to start",
+            show_status=False,
+            on_before_load=_clear_video_artifacts,
         )
 
-        # Upload status
-        render_upload_status(st.session_state.video_session)
+        formats, classes = st.columns(2)
+        with formats:
+            st.markdown(
+                "**Supported formats**  \nMP4 · MOV · AVI · MKV · WebM"
+            )
+        with classes:
+            st.markdown(
+                "**Detection classes**  \nAirplane · Helicopter · Bird · Drone"
+            )
 
-        st.divider()
 
-        # Scan controls (placeholder for future phases)
-        st.header("🔍 Detection Settings")
+def _ensure_annotated_video(active_video) -> Optional[str]:
+    """Build or reuse the temp annotated MP4 for the active clip."""
+    if st.session_state.annotated_video_id != active_video.id:
+        remove_annotated_output(st.session_state.get("annotated_path"))
+        st.session_state.annotated_path = None
+        st.session_state.annotated_video_id = None
+
+    existing = st.session_state.get("annotated_path")
+    if existing and Path(existing).exists():
+        return existing
+
+    dest = annotated_output_path(
+        active_video.id,
+        directory=st.session_state.video_session.get_annotated_dir(),
+    )
+    progress = st.progress(0, text="Applying detection overlays…")
+
+    def on_progress(frame_index: int, total: int) -> None:
+        ratio = min(1.0, frame_index / total) if total else 0.0
+        progress.progress(ratio, text=f"Applying detection overlays… {frame_index}/{total}")
+
+    try:
+        written = write_annotated_video(
+            active_video.path,
+            str(dest),
+            st.session_state.scan_pipeline,
+            on_progress=on_progress,
+        )
+    except Exception as exc:
+        progress.empty()
+        st.error(f"Could not build annotated video: {exc}")
+        return None
+
+    progress.empty()
+    st.session_state.annotated_path = written
+    st.session_state.annotated_video_id = active_video.id
+    return written
+
+
+def _render_player(active_video) -> None:
+    """Unified native player: video on top, scan toggle just above it."""
+    with st.container():
+        title_col, clear_col = st.columns([4, 1])
+        with title_col:
+            st.subheader(active_video.display_name)
+            meta_parts = []
+            if active_video.width > 0 and active_video.height > 0:
+                meta_parts.append(f"{active_video.width}×{active_video.height}")
+            if active_video.duration_ms > 0:
+                meta_parts.append(f"{active_video.duration_ms / 1000:.1f}s")
+                meta_parts.append(f"{active_video.frame_count} frames")
+                meta_parts.append(f"{active_video.fps:.1f} fps")
+            if meta_parts:
+                st.caption(" · ".join(meta_parts))
+        with clear_col:
+            if st.button("Clear video", key="clear_active_video"):
+                _clear_session_video()
+                st.rerun()
+
         scan_enabled = st.toggle(
             "Enable Live Scan",
             value=st.session_state.scan_enabled,
-            help="Real-time YOLO detection (requires active video)",
-            disabled=st.session_state.video_session.get_active() is None,
+            help="Bake YOLO boxes into a temporary MP4, then play it natively.",
         )
-        st.session_state.scan_enabled = scan_enabled
+        _sync_scan_state(scan_enabled)
 
-        if scan_enabled and st.session_state.video_session.get_active() is None:
-            st.warning("⚠️ Live scan requires an active video")
+        if scan_enabled and st.session_state.detector_status != "ready":
+            st.caption(f"Scanner unavailable — {st.session_state.detector_status}")
 
-    # Main content area
-    active_video = st.session_state.video_session.get_active()
+        play_path = active_video.path
+        play_stem = active_video.id
+        if scan_enabled and st.session_state.detector_status == "ready":
+            annotated = _ensure_annotated_video(active_video)
+            if annotated:
+                play_path = annotated
+                play_stem = f"{active_video.id}-scan"
 
-    # Debug info (can be removed later)
-    if st.checkbox("🔍 Show Debug Info", key="debug_toggle"):
-        st.write("**Debug Information:**")
-        st.write(f"- Active video: {active_video}")
-        if active_video:
-            st.write(f"- Video name: {active_video.display_name}")
-            st.write(f"- Video status: {active_video.status}")
-        st.write(f"- Last upload success: {st.session_state.get('last_upload_success', 'None')}")
-
-    if active_video is None:
-        # No video loaded state
-        st.info(
-            "👆 **Get Started:** Upload a video file using the sidebar to begin analysis."
+        render_native_player(
+            play_path,
+            video_id=play_stem,
+            frame_width=active_video.width,
+            frame_height=active_video.height,
+            max_width_px=st.session_state.video_session.get_player_max_width_px(),
+            max_height_px=st.session_state.video_session.get_player_max_height_px(),
         )
 
-        # Show project information
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.subheader("🎯 Supported Formats")
-            st.markdown("""
-            - **MP4** (.mp4)
-            - **QuickTime** (.mov)
-            - **AVI** (.avi)
-            - **Matroska** (.mkv)
-            - **WebM** (.webm)
-            """)
-
-        with col2:
-            st.subheader("🔍 Detection Classes")
-            st.markdown("""
-            - ✈️ **Airplane**
-            - 🚁 **Helicopter**
-            - 🐦 **Bird**
-            - 🚀 **Drone**
-            """)
-
-    else:
-        # Video loaded state
-        st.success(f"📹 **Active Video:** {active_video.display_name}")
-
-        # Video player controls
-        with st.container():
-            st.subheader("🎮 Video Player")
-
-            # Playback controls
-            render_playback_controls(
-                st.session_state.playback_controller, key="main_playback_controls"
+        with st.expander("Replace video"):
+            render_video_uploader(
+                st.session_state.video_session,
+                key="replace_uploader",
+                heading=None,
+                show_status=False,
+                on_before_load=_clear_video_artifacts,
             )
 
-            # Progress display
-            playback_state = st.session_state.playback_controller.get_state()
-            if playback_state:
-                render_progress_display(playback_state, key="main_progress")
 
-                # Seek control
-                render_seek_control(
-                    st.session_state.playback_controller, key="main_seek"
-                )
-
-            # Status display
-            render_playback_status(playback_state)
-
-        # Live scan controls
-        with st.container():
-            st.subheader("🔍 Live Aerial Object Scanner")
-
-            # Show detector status
-            if st.session_state.detector_status != "ready":
-                st.warning(f"⚠️ **Scanner Notice:** {st.session_state.detector_status}")
-                st.info(
-                    "🎮 **Player continues normally** - Upload and playback are fully functional"
-                )
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-                # Scan toggle
-                if st.button(
-                    (
-                        "🟢 Enable Scan"
-                        if not st.session_state.scan_enabled
-                        else "🔴 Disable Scan"
-                    ),
-                    key="scan_toggle",
-                ):
-                    st.session_state.scan_enabled = not st.session_state.scan_enabled
-
-                    if st.session_state.scan_enabled:
-                        st.session_state.scan_pipeline.enable_scan()
-                        st.success("✅ Live scan enabled")
-                    else:
-                        st.session_state.scan_pipeline.disable_scan()
-                        st.info("⏸️ Live scan disabled")
-                    st.rerun()
-
-            with col2:
-                # Scan status
-                if st.session_state.scan_enabled:
-                    st.success("🔍 **Status:** Scanning enabled")
-                else:
-                    st.info("⏸️ **Status:** Scanning disabled")
-
-                # Show last detections count
-                last_detections = st.session_state.scan_pipeline.get_last_detections()
-                if last_detections:
-                    detection_count = len(last_detections.detections)
-                    if detection_count > 0:
-                        st.caption(f"🎯 Last scan: {detection_count} objects detected")
-                    else:
-                        st.caption("🔍 Last scan: No objects detected")
-
-        # Frame display with overlays
-        with st.container():
-            st.subheader("📺 Video Display")
-
-            # Get current frame from playback
-            current_frame = st.session_state.playback_controller.read_current_frame()
-
-            if current_frame is not None:
-                # Process frame for detection if scan enabled
-                if st.session_state.scan_enabled and playback_state.state == "playing":
-                    # Process current frame
-                    detections = st.session_state.scan_pipeline.process_frame(
-                        current_frame, frame_index=playback_state.position_frame
-                    )
-                else:
-                    # Use last cached detections when paused or scan disabled
-                    detections = st.session_state.scan_pipeline.get_last_detections()
-
-                # Draw overlays on frame
-                if detections is not None and len(detections.detections) > 0:
-                    current_frame = draw_detections_on_frame(current_frame, detections)
-
-                # Draw scan status indicator
-                draw_scan_status(
-                    current_frame,
-                    st.session_state.scan_enabled,
-                    st.session_state.scan_pipeline.last_lag_warning,
-                )
-
-                # Display frame with overlays
-                st.image(
-                    current_frame,
-                    channels="BGR",
-                    caption="Video with Detection Overlays",
-                )
-
-                # Performance info
-                if st.session_state.scan_pipeline.last_infer_duration_ms > 0:
-                    st.caption(
-                        f"⚡ Last inference: {st.session_state.scan_pipeline.last_infer_duration_ms:.0f}ms"
-                    )
-
-                # Lag warning
-                if st.session_state.scan_pipeline.last_lag_warning:
-                    st.warning(f"⚠️ {st.session_state.scan_pipeline.last_lag_warning}")
-
-            else:
-                st.info("📺 No frame available")
-
-        # Placeholder for detection overlay (Phase 5 implementation)
-        if st.session_state.scan_enabled:
-            st.subheader("🎯 Detection Results")
-            st.info(
-                "🚧 **Live detection will be implemented in Phase 5**\n\n"
-                "YOLO-based aerial object detection will overlay on video frames."
-            )
-
-    # Footer
-    st.divider()
-    st.caption(
-        "UAP Video Detector | Phase 3: Upload Management | "
-        "Open Source AGPL-3.0 | Filter the knowns, isolate the unknowns"
+def main():
+    """Main Streamlit application entry point."""
+    st.set_page_config(
+        page_title="UAP Video Detector", page_icon="🛸", layout="centered"
     )
+    initialize_session_state()
+
+    st.title("🛸 UAP Video Detector")
+    st.caption("Filter out the knowns to isolate the unknowns")
+
+    active_video = st.session_state.video_session.get_active()
+    if active_video is None:
+        _render_empty_state()
+    else:
+        _render_player(active_video)
 
 
 if __name__ == "__main__":

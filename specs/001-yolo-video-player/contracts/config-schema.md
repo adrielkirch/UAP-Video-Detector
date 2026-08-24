@@ -12,6 +12,11 @@ max_upload_bytes: 2147483648  # 2 GiB soft limit; 0 = unlimited
 raw_dir: "data/raw"
 copy_uploads_to_raw: false
 seek_step_ms: 1000
+skip_step_ms: 10000
+player_max_height_vh: 70
+player_max_width_px: 960   # shrink only if source is larger
+player_max_height_px: 720
+annotated_dir: "temp"      # session-scoped H.264 annotated MP4s; deleted on clear
 ```
 
 ## `config/detector.yaml` (example shape)

@@ -6,16 +6,18 @@ All Technical Context unknowns resolved below. No remaining NEEDS CLARIFICATION.
 
 ---
 
-## 1. UI shell vs frame-accurate player
+## 1. UI shell vs HTML5 video layer
 
-**Decision**: Streamlit for upload/session/controls shell; OpenCV `VideoCapture` as the authoritative frame source for position, seek, and scan.
+**Decision**: Streamlit (`layout="centered"`) for the session shell. Empty state shows the uploader in the **main column**, not a sidebar. After load, a **Plyr / HTML5** player (via `components.html`) plays a file copied to `src/ui/static/play/` (`enableStaticServing`). OpenCV `VideoCapture` remains the source of truth for duration, fps, and native width/height. YOLO overlays are baked offline into `temp/annotated_<id>.mp4` and remuxed to H.264 with **imageio-ffmpeg**.
 
-**Rationale**: Spec needs seek-to-timestamp, pause-on-frame, and live per-frame detections. Browser/`st.video` alone does not expose reliable frame indices for YOLO. OpenCV provides frame index / msec seek; Streamlit renders the current frame image plus control widgets and optional overlay drawing.
+**Rationale**: Reviewers need real play/pause/timeline/timestamps. `st.video()` cannot keep a 360×640 clip at 360×640 (it stretches to a landscape box). `st.image` + `st.rerun()` is not a player. `streamlit-webrtc` failed for uploaded files (`InvalidStateError: setRemoteDescription`). `streamlit-player` needs a public URL or a huge base64 payload. Static serving + a sized HTML5 box matches FR-003 / FR-013 / FR-014.
 
 **Alternatives considered**:
-- Pure `st.video` — simple playback, poor seek/frame sync for detection
-- PyQt/DearPyGui desktop player — stronger native player, heavier dependency surface for MVP
-- Gradio — similar limits to Streamlit for frame-accurate scan
+- Pure `st.video` — native controls, cannot constrain portrait size in Streamlit 1.62
+- `streamlit-webrtc` for files — SDP/ICE `setRemoteDescription` errors
+- `streamlit-player` — URL or enormous data URI; not for local multi-hundred-MB uploads
+- Frame loop (`st.image` + rerun) — rejected for player UX
+- PyQt/DearPyGui — stronger desktop player, heavier than the Streamlit MVP
 
 ---
 
@@ -71,13 +73,13 @@ All Technical Context unknowns resolved below. No remaining NEEDS CLARIFICATION.
 
 ## 6. Live-scan performance strategy
 
-**Decision**: Configurable **frame stride** (e.g. every Nth frame), lazy model load on first scan enable, prefer GPU when `device: auto` finds CUDA else CPU. Overlay last detections while paused. **`ScanMetrics`** logs infer_ms (and best-effort memory/device); **`lag_warn_ms`** (default 2000) sets SC-006 lag warning when a single infer exceeds the threshold.
+**Decision**: Configurable **frame stride** (e.g. every Nth frame), lazy model load on first scan enable, prefer GPU when `device: auto` finds CUDA else CPU. When the user enables scan, `ScanPipeline` walks the file once, draws overlays, and writes a temp H.264 MP4 for the HTML5 player. **`ScanMetrics`** logs infer_ms (and best-effort memory/device); **`lag_warn_ms`** (default 2000) still flags a slow single infer during the bake.
 
-**Rationale**: SC-006 cares about perceived sync, not every-frame GPU cost. Stride keeps UI responsive on CPU laptops. Constitution requires real-time performance monitoring — metrics hook satisfies that without coupling UI to YOLO.
+**Rationale**: The browser player cannot call YOLO on each displayed frame. Bake-then-play keeps boxes locked to frames (SC-006) and keeps the player loosely coupled. Stride keeps the bake responsive on CPU laptops.
 
 **Alternatives considered**:
 - Every-frame inference always — may lag on CPU
-- Offline batch precompute entire video — not “live” per Story 3
+- WebRTC per-frame overlay during playback — rejected after SDP failures on uploaded files
 - No metrics — violates constitution Performance Monitoring MUST
 
 ---

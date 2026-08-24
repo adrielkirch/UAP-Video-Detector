@@ -7,13 +7,12 @@
 
 | Action | Behavior |
 |--------|----------|
-| Upload file | File picker → `VideoSession.set_from_path`; show name/duration or error |
-| Replace | New upload replaces active; toast/notice “Previous video replaced” |
-| Clear / Remove | Button → `clear()`; controls disabled until next upload |
-| Play / Pause / Stop | Bound to `PlaybackController` |
-| Seek | Slider or equivalent in milliseconds (or % of duration) |
-| Toggle Live Scan | Enables/disables `ScanSession`; does not reset playhead |
-| Overlay | Draw bboxes + class + confidence on current frame image when detections exist |
+| Empty-state upload | Centered main-column file picker (no sidebar). `VideoSession.set_from_path`; then the player replaces the empty state |
+| Replace | Uploader on the player page replaces active; prior annotated + static copies are deleted |
+| Clear / Remove | Button → artifact cleanup + `clear()`; empty-state uploader returns |
+| Play / Pause / Seek | HTML5 / Plyr controls (timeline, current time, duration) |
+| Toggle Scan | Bakes overlays into a temp H.264 MP4 and plays it in the same player; off = original file |
+| Overlay | Boxes + class + confidence are drawn during the bake, not via `st.image` |
 
 ## Coupling rules
 

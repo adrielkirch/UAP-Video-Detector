@@ -6,10 +6,12 @@ opencv-python-headless>=4.9.0.80  # Optimized OpenCV for headless/Docker environ
 numpy>=1.24.0             # High-performance numerical processing for arrays/bounding boxes
 
 # ==============================================================================
-# User Interface (UI) Engine
+# Video layer (centered upload + HTML5/Plyr player)
 # ==============================================================================
-streamlit>=1.32.0         # Rapid web dashboard application framework
+streamlit>=1.32.0         # Session shell; enableStaticServing for src/ui/static/play
+imageio-ffmpeg>=0.5.1     # Bundled FFmpeg — remux OpenCV mp4v → browser H.264
 watchdog>=4.0.0           # Efficient file system monitoring for UI auto-reloads
+streamlit-webrtc>=0.47.0  # Optional future live-camera path (not used for uploads)
 
 # ==============================================================================
 # Testing & Code Quality (TDD Pipeline)
