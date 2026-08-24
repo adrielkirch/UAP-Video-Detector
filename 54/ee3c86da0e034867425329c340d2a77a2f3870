@@ -1,0 +1,148 @@
+specs/001-yolo-video-player/research.md
+  s_beb8511bca9c7c::t_08d8bf227a2c7b 9,11,13,16-20
+  s_beb8511bca9c7c::t_c7ebe092df7593 76,78,82
+src/ui/components/webrtc_player.py
+  s_beb8511bca9c7c::t_0e885298b7d02d 2,5-6,13,15,60-115,121-124,134-136,161-165,175-177,187-189,193-201,203-228,230-264,269-270,274-277,287-290,303-306,314,317,321-328,339,353-360
+  s_beb8511bca9c7c::t_8440a3de99b13a 265-268,271-273,278
+  s_beb8511bca9c7c::t_dd53293257fc58 1,3-4,7-12,14,16-23,25-28,59,116-120,125-133,137-160,166-174,178-186,190-192,202,229,279-286,294-302,310,315-316,318-320,329-338,350-352,361-362
+  s_beb8511bca9c7c::t_5cc210558b07a6 24
+  s_beb8511bca9c7c::t_bed47c798c02fe 36,41,49-50
+  s_beb8511bca9c7c::t_94c79b1eb8424c 291-293,307-309,311-313
+  s_beb8511bca9c7c::t_f128adc8f98201 340-349
+  s_beb8511bca9c7c::t_39d3b6ef4bd0f2 29-35,37-40,42-48,51-58
+src/orchestration/video_annotator.py
+  s_beb8511bca9c7c::t_de70ec90f5294c 1,3,6-88,90,92-117,120
+  s_beb8511bca9c7c::t_8486cf1e656bd6 145
+  s_beb8511bca9c7c::t_ae23ac3abb8995 2,4-5
+  s_beb8511bca9c7c::t_4225b4d5b1d163 89,91
+  s_beb8511bca9c7c::t_8a5b365ef88a41 118-119,121-144
+.streamlit/config.toml
+  s_beb8511bca9c7c::t_75ff6e1dc05266 9
+src/ui/components/uploader.py
+  s_beb8511bca9c7c::t_cdfb60bd1aade8 10
+  s_beb8511bca9c7c::t_ad6685d67e77cd 17-21,30-31,42-43,46-47,57
+  s_beb8511bca9c7c::t_bc4f6b723a7611 22,32
+  s_beb8511bca9c7c::t_0aaf9cd99d0e20 90
+  s_beb8511bca9c7c::t_725f1783d5f8cd 79-81
+src/ui/components/player_controls.py
+  s_beb8511bca9c7c::t_63c06eb2d1c99b 2,4-5
+tests/unit/test_webrtc_player.py
+  s_beb8511bca9c7c::t_41d0adb0922114 21
+  s_beb8511bca9c7c::t_8fbe18aca3e91d 162-173
+  s_beb8511bca9c7c::t_23ed12d3bf0645 250-251
+  s_beb8511bca9c7c::t_6c80d0a9f83322 186-237
+  s_beb8511bca9c7c::t_1d782b9c7ddd57 141,150,152-156,174,176-177
+  s_beb8511bca9c7c::t_4aa8265d1f7945 19
+  s_beb8511bca9c7c::t_3b05d87bca1cab 128-129
+  s_beb8511bca9c7c::t_643a2a1fd5069e 1-14,20,22-127,130-131,238-245
+  s_beb8511bca9c7c::t_25b88e4a46518d 246
+  s_beb8511bca9c7c::t_23d852d7e9e733 132-140,142-149,151,175,178-185
+  s_beb8511bca9c7c::t_6acb1a50c28879 247-249
+  s_beb8511bca9c7c::t_ce52c59b2964f6 15-18
+  s_beb8511bca9c7c::t_c495d29a62bbac 157-161
+specs/001-yolo-video-player/data-model.md
+  s_beb8511bca9c7c::t_65f7c75444eacd 23-24
+.gitignore
+  s_beb8511bca9c7c::t_80830f1951558d 64-68
+  s_beb8511bca9c7c::t_9252af00508659 2
+src/ui/app.py
+  s_beb8511bca9c7c::t_7985bc78f74f8f 4-5
+  s_beb8511bca9c7c::t_7b1ba97d4fefa3 193,198,202,205-206
+  s_beb8511bca9c7c::t_6ced7fecefe487 168-170,172-176
+  s_beb8511bca9c7c::t_90cb37e3f41783 209-215
+  s_beb8511bca9c7c::t_4eb3a09de1bf2e 84-86
+  s_beb8511bca9c7c::t_3c656762db5a1e 221-222
+  s_beb8511bca9c7c::t_84c0030e8a77c6 10
+  s_beb8511bca9c7c::t_2548dff0fdfb72 9,11-12,16,18,44,53,55,73-79,81,99,101-108,110,112-120,160-162,164-167,171,177-178,180,187-190,219-220,224-233
+  s_beb8511bca9c7c::t_cac613b043f61a 25-27
+  s_beb8511bca9c7c::t_980de202a2194e 82-83,87,91-95
+  s_beb8511bca9c7c::t_8e4682f3ad7489 191
+  s_beb8511bca9c7c::t_380af67a252073 109
+  s_beb8511bca9c7c::t_f3305d3448a348 203-204
+  s_beb8511bca9c7c::t_c957216bab0855 20-23,29,66-67,69-70,80,88-90,96-98,100,123-128,130-159,163,179,185,192,194-197,199-201
+src/ui/components/native_player.py
+  s_beb8511bca9c7c::t_d1e3b225616d56 1,6-7,123,140-144,146-147,150
+  s_beb8511bca9c7c::t_ef5c4a101320b7 2-5,8-11,13-17,20-58,61-65,68-76,79-81,120-122,145,148-149,151-155,157-161
+  s_beb8511bca9c7c::t_31d7fa7674b297 12,18-19,59-60,66-67,77-78,82,95-119,124-139,156
+  s_beb8511bca9c7c::t_abb83912af4547 83-94
+specs/001-yolo-video-player/contracts/ui-session.md
+  s_beb8511bca9c7c::t_8ca4138739b327 10-15
+tests/unit/test_video_session.py
+  s_beb8511bca9c7c::t_06d063e835c961 97-98
+  s_beb8511bca9c7c::t_7da4e0132ca708 111-112
+requirements.txt
+  s_beb8511bca9c7c::t_c595ca4595e5f9 9,11-12,14
+.cursor/skills/streamlit-webrtc-implementation/SKILL.md
+  s_beb8511bca9c7c::t_05d5072ce02c04 1-30
+tests/unit/test_native_player.py
+  s_beb8511bca9c7c::t_5f43c62a229be8 1-5,7-35
+  s_beb8511bca9c7c::t_c27c38c3336eac 6
+  s_beb8511bca9c7c::t_f990e76c17c522 36-43
+config/video_player.yaml
+  s_beb8511bca9c7c::t_5d8ba2d8fda268 6
+  s_beb8511bca9c7c::t_ff9d6d0b2aff2d 5
+  s_beb8511bca9c7c::t_583eecae3cfdd2 8-9
+  s_beb8511bca9c7c::t_1c4623831e14fd 7,10
+specs/001-yolo-video-player/spec.md
+  s_beb8511bca9c7c::t_6487e3fba93a96 93-95,100,103-105
+  s_beb8511bca9c7c::t_dfbfc946f375b0 48,50,52,56-59
+  s_beb8511bca9c7c::t_dddfaa27a67573 31,33,35,39,41-42
+  s_beb8511bca9c7c::t_77032fcf54919e 130
+  s_beb8511bca9c7c::t_afb243c1b7d12e 124-125
+  s_beb8511bca9c7c::t_0e85fbc08dac0a 120
+  s_beb8511bca9c7c::t_a2da17e75756d5 23
+src/ui/components/player_layout.py
+  s_beb8511bca9c7c::t_15f278b64a1b33 1,6-7,9-14,16,19-28,30-31,35-36
+  s_beb8511bca9c7c::t_cd032068547ae5 2-5,8,15,17-18,29,32-34
+  s_beb8511bca9c7c::t_5844c65596bfa6 37-51
+tests/unit/test_video_annotator.py
+  s_beb8511bca9c7c::t_585bac8fd3a507 1,3-6,8-34,36-40,42-46,51-72
+  s_beb8511bca9c7c::t_4f85ceb869f137 73
+  s_beb8511bca9c7c::t_ba705daf0e04c8 2
+  s_beb8511bca9c7c::t_a0b1cf19c5d7e6 7
+  s_beb8511bca9c7c::t_57678c4e4b8f91 47-50
+  s_beb8511bca9c7c::t_813eaf045f77f8 35,41
+specs/001-yolo-video-player/contracts/config-schema.md
+  s_beb8511bca9c7c::t_4bdaf243c0cb84 15-19
+README.md
+  s_beb8511bca9c7c::t_883a1784be77b7 139
+  s_beb8511bca9c7c::t_1d2d31daf8aad5 267-269,273-277
+  s_beb8511bca9c7c::t_2f9e82e83b565d 231-233
+  s_beb8511bca9c7c::t_66c8e37b3712ce 199
+  s_beb8511bca9c7c::t_d9b986512692de 147,150,152,154,156,158-160,162,164,166-170,172-174,176-187,191,194-198,201-204
+src/ingestion/video_session.py
+  s_beb8511bca9c7c::t_0bb9b4f48d9c9b 63
+  s_beb8511bca9c7c::t_0cc445d786eaa3 67
+  s_beb8511bca9c7c::t_a2400e4fec3c0b 168-169
+  s_beb8511bca9c7c::t_778a8cc0de4d80 64
+  s_beb8511bca9c7c::t_0d06f0e41e394f 65-66
+  s_beb8511bca9c7c::t_5cf0d54f12f4e5 94-101
+  s_beb8511bca9c7c::t_350df17a0123f8 86-89
+  s_beb8511bca9c7c::t_ab051a8ef2892b 147-148
+  s_beb8511bca9c7c::t_d0df978450bdd6 90-93
+  s_beb8511bca9c7c::t_e89245e833cbbf 34-35
+  s_beb8511bca9c7c::t_d6253068fecdde 75-85
+pyproject.toml
+  s_beb8511bca9c7c::t_67ed43035a89c5 30
+  s_beb8511bca9c7c::t_4c88383eb81c34 31
+src/ui/static/vendor/plyr/plyr.css
+  s_beb8511bca9c7c::t_1f27516006feb5 1
+src/ui/static/vendor/plyr/plyr.polyfilled.min.js
+  s_beb8511bca9c7c::t_0f83395110b308 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "54ee3c86da0e034867425329c340d2a77a2f3870",
+  "prompts": {},
+  "sessions": {
+    "s_beb8511bca9c7c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ebafba4b-53d5-4952-9fab-bb2cfacb8e18",
+        "model": "grok-4.6"
+      },
+      "human_author": "Adriel Henrique de Mello Kirch <adrielhenriquedemello.kirch@wexinc.com>"
+    }
+  }
+}
