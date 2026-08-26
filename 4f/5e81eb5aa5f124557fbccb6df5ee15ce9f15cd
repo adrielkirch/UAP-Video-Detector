@@ -1,0 +1,28 @@
+MIGRATION_CLEANUP.md
+  h_3cb9a5010e1da3 1-381
+.claude/skills/yolo-video-player/SKILL.md
+  h_3cb9a5010e1da3 1-399
+README.md
+  s_0cb630885ce3c5::t_a1a1e6acb9ba39 11,13,15,17,19,21,23-25,27,29,31,33,35,37-40,43-48,50-51,53,55,57,59,61,63-68,70,73-90,93,95,97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "4f5e81eb5aa5f124557fbccb6df5ee15ce9f15cd",
+  "prompts": {},
+  "humans": {
+    "h_3cb9a5010e1da3": {
+      "author": "Adriel Henrique de Mello Kirch <adrielhenriquedemello.kirch@wexinc.com>"
+    }
+  },
+  "sessions": {
+    "s_0cb630885ce3c5": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "d1ce9eb2-ee85-4a37-aea7-6b2aba46bcc4",
+        "model": "copilot/claude-haiku-4.5"
+      },
+      "human_author": "Adriel Henrique de Mello Kirch <adrielhenriquedemello.kirch@wexinc.com>"
+    }
+  }
+}
