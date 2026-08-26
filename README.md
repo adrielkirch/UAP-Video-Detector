@@ -8,125 +8,93 @@
 
 ---
 
-## 📋 Spec Kit (Recommended)
+## 📋 Skill-Driven Development
 
-This project uses [GitHub Spec Kit](https://github.com/github/spec-kit) so **specifications stay the source of truth** for what we build. Spec Kit is **open source and optional** — you can contribute without it — but it is **recommended** for feature work so requirements, plans, and tasks stay aligned before code changes.
+This project uses **lightweight, consolidated Skill Files** (`.claude/skills/*/SKILL.md`) to keep AI context fast, lean, and open-source contributor-friendly. Each skill consolidates requirements, implementation plans, and actionable tasks in a single file — no multi-file specs, no external scaffolding, no heavy token overhead.
 
-### Prerequisites
-* Python 3.11+
-* [uv](https://docs.astral.sh/uv/) (Astral’s Python package manager)
+### Supported Editors & AI Agents
 
-### Platform & Shell Compatibility
-
+**Editors**: Cursor, VS Code (GitHub Copilot / Claude Code), Zed, Cline, and other AI coding agents  
 **Operating Systems**: Windows, macOS, Linux  
-**Shells**: Git Bash (recommended), PowerShell, Bash, Zsh, Command Prompt/CMD  
-**Editors**: Cursor, VS Code, Claude Code, Zed, and 25+ other AI coding agents
+**Shells**: Git Bash (recommended), PowerShell, Bash, Zsh, CMD
 
-### Install the Specify CLI
+### Available Skills
 
-**Ephemeral (no permanent install):**
-```bash
-uvx --from git+https://github.com/github/spec-kit.git specify --help
+| Skill | Location | Purpose |
+|-------|----------|---------|
+| **yolo-video-player** | [`.claude/skills/yolo-video-player/SKILL.md`](.claude/skills/yolo-video-player/SKILL.md) | Video uploader, HTML5 player, and live YOLO detection for aerial objects (airplane, helicopter, bird, drone) |
+
+More skills coming as features are developed.
+
+### How to Contribute
+
+#### Step 1: Pick a Skill
+
+Open the skill file (e.g., [`.claude/skills/yolo-video-player/SKILL.md`](.claude/skills/yolo-video-player/SKILL.md)) and review the **Overview** and **Execution Checklist** sections.
+
+#### Step 2: Activate the Skill in Your Editor
+
+**In Cursor (recommended):**
+```
+Type: /yolo-video-player
+or: skills: yolo-video-player
 ```
 
-**Persistent (recommended for regular contributors):**
-```bash
-uv tool install specify-cli
-# Or pin a release: uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@vX.Y.Z
+**In VS Code + GitHub Copilot / Claude Code:**
+```
+Type: /yolo-video-player
+or: skills: yolo-video-player
+(or use the Copilot chat command system for your agent)
 ```
 
-### Multi-Platform & Multi-Editor Support
+**In Other Editors:**
+Refer to your editor's documentation for activating custom skills. The skill file path is `.claude/skills/yolo-video-player/SKILL.md`.
 
-This open source project supports multiple development environments and shells:
+#### Step 3: Follow the Checklist
 
-#### **For Cursor users** (current setup)
-Already initialized! Skills are in `.cursor/skills/`. Use `/speckit-*` commands in chat.
+The skill file contains a step-by-step **Execution Checklist** organized by phases. Implement each phase in order; TDD is required (write failing tests first, confirm they fail, implement, confirm green).
 
-#### **For VS Code + GitHub Copilot users**
-```bash
-cd UAP-Video-Detector
-specify init --here --force --integration copilot --script bash  # Git Bash
-# OR
-specify init --here --force --integration copilot --script ps    # PowerShell
+#### Step 4: Submit Your PR
+
+Commit your changes and open a pull request. Reference the skill file and the phases you've completed.
+
+### Why Skill-Driven Development?
+
+- **Low Token Overhead**: One consolidated file per feature, not 20+ fragmented templates
+- **Open-Source Friendly**: Contributors don't need complex tooling or large token budgets
+- **Fast Context Load**: AI agents load only the specific skill they need
+- **No External Dependencies**: No CLI tools, no external scaffolding scripts, no multi-file sync
+- **Deterministic Workflows**: Clear, inline checklists and directives replace multi-step agent commands
+- **Easier Maintenance**: Single source of truth per feature; no spec drift between files
+
+### Project Structure
+
+```
+.claude/skills/                           # Consolidated skill files
+└── yolo-video-player/
+    └── SKILL.md                          # Single unified skill (replaces multi-file specs)
+
+src/
+├── ingestion/                            # Video upload & playback
+├── inference/                            # Detection & YOLO interface
+├── orchestration/                        # Binding player ↔ detector
+└── ui/                                   # Streamlit UI layer
+
+config/
+├── video_player.yaml                    # Player config (formats, sessions)
+└── detector.yaml                        # Detector config (weights, thresholds, device)
+
+tests/
+├── unit/                                 # Isolated module tests
+├── contract/                             # Interface contract tests
+└── integration/                          # End-to-end scenarios
 ```
 
-#### **For Claude Code users** 
-```bash
-cd UAP-Video-Detector
-specify init --here --force --integration claude --script bash   # Git Bash  
-# OR
-specify init --here --force --integration claude --script ps     # PowerShell
-```
+### Migration Notes
 
-#### **For other AI coding agents**
+**This project recently migrated from GitHub Spec-Kit to Skill-Driven Development** to reduce complexity and lower the barrier for open-source contributors. Legacy Spec-Kit artifacts (`.specify/`, `/.github/agents/`, `/.github/prompts/`, `/.claude/skills/speckit-*/`) have been consolidated into `.claude/skills/yolo-video-player/SKILL.md`.
 
-Spec Kit supports 30+ AI coding agents. Popular open source friendly options:
-
-```bash
-# Gemini CLI
-specify init --here --force --integration gemini
-
-# Codex CLI  
-specify init --here --force --integration codex
-
-# Cline (VS Code extension)
-specify init --here --force --integration cline
-
-# Zed editor
-specify init --here --force --integration zed
-
-# Tabnine CLI
-specify init --here --force --integration tabnine
-
-# See all 30+ available integrations
-specify integration list
-
-# Generic setup (bring your own agent)
-specify init --here --force --integration generic --integration-options="--commands-dir .myagent/commands/"
-```
-
-### Shell Support
-
-**Git Bash (recommended for cross-platform)**:
-```bash
-# All Spec Kit scripts work in Git Bash
-cd UAP-Video-Detector
-specify init --here --script sh
-```
-
-**PowerShell (Windows)**:
-```powershell
-# PowerShell-optimized scripts
-cd UAP-Video-Detector  
-specify init --here --script ps
-```
-
-**Command Prompt/CMD**:
-```cmd
-# Basic support via Python scripts
-cd UAP-Video-Detector
-specify init --here --script py
-```
-
-### Typical Spec-Driven Workflow
-
-Regardless of your editor/agent, the workflow is the same:
-
-1. **`/speckit-constitution`** — establish project principles  
-2. **`/speckit-specify`** — define what and why (requirements)  
-3. **`/speckit-plan`** — create technical implementation plan  
-4. **`/speckit-tasks`** — generate actionable task breakdown  
-5. **`/speckit-implement`** — execute the implementation  
-
-**Optional quality gates**: `/speckit-clarify`, `/speckit-checklist`, `/speckit-analyze`, `/speckit-converge`
-
-**Note**: Command syntax varies by agent:
-- **Cursor/VS Code**: `/speckit-*` 
-- **Claude Code**: `/speckit.*` or skills mode
-- **Codex CLI**: `$speckit-*`
-- **Generic**: Check your agent's documentation
-
-Scaffolding lives in `.specify/` (templates, scripts, memory). Feature specs are written under `specs/` as you work. See the [Spec Kit Quick Start](https://github.github.io/spec-kit/quickstart.html) for details.
+For details on this migration, see [MIGRATION_CLEANUP.md](MIGRATION_CLEANUP.md).
 
 ---
 
